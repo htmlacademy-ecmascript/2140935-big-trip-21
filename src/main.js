@@ -1,8 +1,8 @@
 import TripInfoView from './view/trip-info-view.js';
 import FilterView from './view/filter-view.js';
 import EventsPresenter from './presenter/events-presenter.js';
-import {render} from './render.js';
-import { offers } from './mocks/offers.js';
+import { render } from './render.js';
+import { points } from './mocks/points.js';
 
 const siteTripInfoElement = document.querySelector('.trip-main');
 const siteTripControlsElement = document.querySelector('.trip-controls__filters');
@@ -15,4 +15,4 @@ render(new FilterView(), siteTripControlsElement);
 eventsPresenter.init();
 
 // eslint-disable-next-line no-console
-console.log(offers);
+console.log(points);
