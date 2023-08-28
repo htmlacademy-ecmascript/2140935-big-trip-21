@@ -1,5 +1,7 @@
 import { getRandomInteger } from '../utils';
 
+const IMAGE_URL = 'https://loremflickr.com/248/152?random=';
+
 export const destinations = [
   {
     'id': 1,
@@ -7,48 +9,76 @@ export const destinations = [
     'name': 'Amsterdam',
     'pictures': [
       {
-        'src': `https://loremflickr.com/248/152?random=${getRandomInteger(1, 1000)}`,
-        'description': 'Amsterdam long streets'
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Amsterdam long streets 1'
+      },
+      {
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Amsterdam long streets 2'
+      },
+      {
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Amsterdam long streets 3'
       }]
   },
   {
     'id': 2,
-    'description': 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
+    'description': 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets. Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy. At the base of Mont Blanc, the highest summit in the Alps, it\'s renowned for its skiing.',
     'name': 'Chamonix',
     'pictures': [
       {
-        'src': `https://loremflickr.com/248/152?random=${getRandomInteger(1, 1000)}`,
-        'description': 'Chamonix parliament building'
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Chamonix image 1'
+      },
+      {
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Chamonix image 2'
+      },
+      {
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Chamonix image 3'
+      },
+      {
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Chamonix image 4'
       }]
   },
   {
     'id': 3,
-    'description': 'Geneva, is a beautiful city in the centre of Europe.',
+    'description': 'Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.',
     'name': 'Geneva',
     'pictures': [
       {
-        'src': `https://loremflickr.com/248/152?random=${getRandomInteger(1, 1000)}`,
-        'description': 'Geneva city center'
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Geneva image 1 2here'
+      },
+      {
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Geneva image 2 here'
+      },
+      {
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Geneva image 3 here'
+      },
+      {
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Geneva image 4 here'
+      },
+      {
+        'src': `${IMAGE_URL}${getRandomInteger(1, 1000)}`,
+        'description': 'Geneva image 5 here'
       }]
   },
   {
     'id': 4,
     'description': 'London, is a beautiful city in South England.',
     'name': 'London',
-    'pictures': [
-      {
-        'src': `https://loremflickr.com/248/152?random=${getRandomInteger(1, 1000)}`,
-        'description': 'London City'
-      }]
+    'pictures': []
   },
   {
     'id': 5,
-    'description': 'Port Isaac, is a beautiful city in west England.',
+    'description': null,
     'name': 'Port Isaac',
-    'pictures': [
-      {
-        'src': `https://loremflickr.com/248/152?random=${getRandomInteger(1, 1000)}`,
-        'description': 'Port Isaac beach'
-      }]
+    'pictures': []
   }
 ];

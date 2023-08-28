@@ -1,8 +1,8 @@
-import { getRandomArrayElement, getRandomInteger, getRandomTenInteger, generateRandomDate, getRandomBoolean } from '../utils.js';
+import { getRandomArrayElement, getRandomInteger, getRandomTenInteger, generateRandomDate, getRandomBoolean, getRandomArray } from '../utils.js';
 import { offers } from './offers.js';
 
 const TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
-const points = [];
+const mockPoints = [];
 
 // Получаем офферы по type
 function getOffersForType(type) {
@@ -16,15 +16,17 @@ for (let i = 0; i < 20; i++) {
   const { startDate, endDate } = generateRandomDate();
   const point = {
     'id': i + 1,
-    'base_price': getRandomTenInteger(100, 3000),
-    'date_from': startDate.toISOString(),
-    'date_to': endDate.toISOString(),
+    'basePrice': getRandomTenInteger(100, 3000),
+    'dateFrom': startDate.toISOString(),
+    'dateTo': endDate.toISOString(),
     'destination': getRandomInteger(1, 5),
     'isFavorite': getRandomBoolean(),
-    'offers': getOffersForType(type),
+    'offers': getRandomArray(getOffersForType(type)),
     'type': type
   };
-  points.push(point);
+  mockPoints.push(point);
 }
 
-export {points};
+export function getRandomPoint() {
+  return getRandomArrayElement(mockPoints);
+}

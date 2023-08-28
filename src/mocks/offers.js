@@ -5,7 +5,7 @@ export const offers = [
     'type': 'Taxi',
     'offers': [
       {
-        'id': 1,
+        'id': crypto.randomUUID(),
         'title': 'Order Uber',
         'price': getRandomTenInteger(10, 400)
       }
@@ -15,12 +15,12 @@ export const offers = [
     'type': 'Bus',
     'offers': [
       {
-        'id': 2,
+        'id': crypto.randomUUID(),
         'title': 'Book tickets',
         'price': getRandomTenInteger(10, 400)
       },
       {
-        'id': 10,
+        'id': crypto.randomUUID(),
         'title': 'Choose seats',
         'price': getRandomTenInteger(10, 400)
       },
@@ -30,12 +30,12 @@ export const offers = [
     'type': 'Train',
     'offers': [
       {
-        'id': 3,
+        'id': crypto.randomUUID(),
         'title': 'Travel by train',
         'price': getRandomTenInteger(10, 400)
       },
       {
-        'id': 10,
+        'id': crypto.randomUUID(),
         'title': 'Choose seats',
         'price': getRandomTenInteger(10, 400)
       },
@@ -45,17 +45,22 @@ export const offers = [
     'type': 'Flight',
     'offers': [
       {
-        'id': 4,
+        'id': crypto.randomUUID(),
+        'title': 'Book tickets',
+        'price': getRandomTenInteger(10, 400)
+      },
+      {
+        'id': crypto.randomUUID(),
         'title': 'Switch to comfort class',
         'price': getRandomTenInteger(10, 400)
       },
       {
-        'id': 5,
+        'id': crypto.randomUUID(),
         'title': 'Add meal',
         'price': getRandomTenInteger(10, 400)
       },
       {
-        'id': 10,
+        'id': crypto.randomUUID(),
         'title': 'Choose seats',
         'price': getRandomTenInteger(10, 400)
       },
@@ -65,12 +70,12 @@ export const offers = [
     'type': 'Restaurant',
     'offers': [
       {
-        'id': 5,
+        'id': crypto.randomUUID(),
         'title': 'Add meal',
         'price': getRandomTenInteger(10, 400)
       },
       {
-        'id': 6,
+        'id': crypto.randomUUID(),
         'title': 'Add breakfast',
         'price': getRandomTenInteger(10, 400)
       }
@@ -80,7 +85,7 @@ export const offers = [
     'type': 'Drive',
     'offers': [
       {
-        'id': 7,
+        'id': crypto.randomUUID(),
         'title': 'Rent a car',
         'price': getRandomTenInteger(10, 400)
       },
@@ -89,34 +94,34 @@ export const offers = [
   {
     'type': 'Sightseeing',
     'offers': [
-      {
-        'id': 3,
-        'title': 'Travel by train',
-        'price': getRandomTenInteger(10, 400)
-      },
-      {
-        'id': 8,
-        'title': 'Lunch in city',
-        'price': getRandomTenInteger(10, 400)
-      },
     ]
   },
   {
     'type': 'Check-in',
     'offers': [
       {
-        'id': 4,
+        'id': crypto.randomUUID(),
         'title': 'Switch to comfort class',
         'price': getRandomTenInteger(10, 400)
       },
       {
-        'id': 9,
+        'id': crypto.randomUUID(),
         'title': 'Add luggage',
         'price': getRandomTenInteger(10, 400)
       },
       {
-        'id': 10,
+        'id': crypto.randomUUID(),
         'title': 'Choose seats',
+        'price': getRandomTenInteger(10, 400)
+      },
+      {
+        'id': crypto.randomUUID(),
+        'title': 'Travel by train',
+        'price': getRandomTenInteger(10, 400)
+      },
+      {
+        'id': crypto.randomUUID(),
+        'title': 'Add meal',
         'price': getRandomTenInteger(10, 400)
       },
     ]
@@ -125,8 +130,18 @@ export const offers = [
     'type': 'Ship',
     'offers': [
       {
-        'id': 10,
+        'id': crypto.randomUUID(),
         'title': 'Choose seats',
+        'price': getRandomTenInteger(10, 400)
+      },
+      {
+        'id': crypto.randomUUID(),
+        'title': 'Add luggage',
+        'price': getRandomTenInteger(10, 400)
+      },
+      {
+        'id': crypto.randomUUID(),
+        'title': 'Switch to comfort class',
         'price': getRandomTenInteger(10, 400)
       },
     ]
