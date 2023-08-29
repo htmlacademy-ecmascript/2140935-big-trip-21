@@ -1,30 +1,43 @@
 import EventsList from '../view/events-list-view.js';
-import NewPointView from '../view/new-point-form-view.js';
-import EditPointView from '../view/edit-point-form-view.js';
 import PointView from '../view/point-view.js';
 import SortView from '../view/sort-view.js';
-import {render} from '../render.js';
+import EditPointPresenter from './edit-point-presenter.js';
+import { POINT_DEFAULT } from '../const.js';
+import { render } from '../render.js';
 
 export default class EventsPresenter {
   eventsListComponent = new EventsList();
 
-  constructor({eventsContainer, pointsModel, offersModel}) {
+  constructor({ eventsContainer, pointsModel, offersModel, destinationsModel }) {
     this.eventsContainer = eventsContainer;
     this.pointsModel = pointsModel;
     this.offersModel = offersModel;
+    this.destinationsModel = destinationsModel;
   }
 
   init() {
     this.points = [...this.pointsModel.getPoints()];
-    this.offers = [...this.offersModel.getOffers()];
+    const newPoint = new EditPointPresenter({
+      editPointContainer: this.eventsListComponent,
+      point: POINT_DEFAULT,
+      offersModel: this.offersModel,
+      destinationsModel: this.destinationsModel
+    });
+    const editPoint = new EditPointPresenter({
+      editPointContainer: this.eventsListComponent,
+      point: this.points[1],
+      offersModel: this.offersModel,
+      destinationsModel: this.destinationsModel
+    });
+
     render(new SortView(), this.eventsContainer);
     render(this.eventsListComponent, this.eventsContainer);
-    render(new NewPointView(0), this.eventsListComponent.getElement());
-    render(new PointView({point: this.points[1], allOffers: this.offers}), this.eventsListComponent.getElement());
-    render(new EditPointView({point: this.points[2], allOffers: this.offers}), this.eventsListComponent.getElement());
+    newPoint.init();
+    render(new PointView({ point: this.points[0], destination: this.destinationsModel.getDestination(this.points[0].destination), offers: [...this.offersModel.getOffersById(this.points[0].offers)] }), this.eventsListComponent.getElement());
+    editPoint.init();
 
-    for (let i = 3; i < this.points.length; i++) {
-      render(new PointView({point: this.points[i], allOffers: this.offers}), this.eventsListComponent.getElement());
+    for (let i = 2; i < this.points.length; i++) {
+      render(new PointView({ point: this.points[i], destination: this.destinationsModel.getDestination(this.points[i].destination), offers: [...this.offersModel.getOffersById(this.points[i].offers)] }), this.eventsListComponent.getElement());
     }
   }
 }

@@ -1,11 +1,9 @@
-/* eslint-disable no-console */
-import {createElement} from '../render.js';
+import { createElement } from '../render.js';
 import { formattedDate, getTimeInterval, formatTimeInterval } from '../utils.js';
 
-// Готовим офферы для вывода в блоке
-function createOffersTemplate(pointOffers) {
+function createOffersTemplate(offers) {
   let offersTemplate = '';
-  for (const offer of pointOffers) {
+  for (const offer of offers) {
     offersTemplate += `
       <li class="event__offer">
         <span class="event__offer-title">${offer.title}</span>
@@ -16,43 +14,29 @@ function createOffersTemplate(pointOffers) {
   return offersTemplate;
 }
 
-function createPointTemplate(point, allOffers) {
-  const {basePrice, dateFrom, dateTo, isFavorite, type, destination, offers} = point;
+function createPointTemplate(point, destination, offers) {
+  const { basePrice, dateFrom, dateTo, isFavorite, type } = point;
   const day = formattedDate(dateFrom, 'MMM DD');
   const timeStart = formattedDate(dateFrom, 'HH:mm');
   const timeEnd = formattedDate(dateTo, 'HH:mm');
   const intervalMm = getTimeInterval (dateFrom, dateTo);
   const intervalHhMm = formatTimeInterval (intervalMm);
   const typeImage = type.toLowerCase();
-
-  // Получаем офферы по id
-  const pointOffers = [];
-  for (const offerId of offers) {
-    for (const offerGroup of allOffers) {
-      for (const offer of offerGroup.offers) {
-        if (offer.id === offerId) {
-          pointOffers.push(offer);
-          break;
-        }
-      }
-    }
-  }
-  // Получаем шаблон с офферами
-  const offersTemplate = createOffersTemplate(pointOffers);
+  const offersTemplate = createOffersTemplate(offers);
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${day}</time>
+        <time class="event__date" datetime="${day}">${day}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${typeImage}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T12:25">${timeStart}</time>
+            <time class="event__start-time" datetime="${timeStart}">${timeStart}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T13:35">${timeEnd}</time>
+            <time class="event__end-time" datetime="${timeEnd}">${timeEnd}</time>
           </p>
           <p class="event__duration">${intervalHhMm}</p>
         </div>
@@ -78,13 +62,14 @@ function createPointTemplate(point, allOffers) {
 }
 
 export default class PointView {
-  constructor({point, allOffers}) {
+  constructor({ point, destination, offers }) {
     this.point = point;
-    this.allOffers = allOffers;
+    this.destination = destination;
+    this.offers = offers;
   }
 
   getTemplate() {
-    return createPointTemplate(this.point, this.allOffers);
+    return createPointTemplate(this.point, this.destination, this.offers);
   }
 
   getElement() {

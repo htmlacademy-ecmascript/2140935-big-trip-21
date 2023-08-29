@@ -1,6 +1,6 @@
 import { getRandomInteger } from '../utils';
 
-const IMAGE_URL = 'https://loremflickr.com/248/152?random=';
+export const IMAGE_URL = 'https://loremflickr.com/248/152?random=';
 
 export const destinations = [
   {
