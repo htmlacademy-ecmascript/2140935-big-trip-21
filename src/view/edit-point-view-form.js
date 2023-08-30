@@ -1,12 +1,12 @@
 import { createElement } from '../render.js';
 
-function createEventsListTemplate() {
-  return '<ul class="trip-events__list"></ul>';
+function createEditPointFormTemplate() {
+  return '<form class="event event--edit" action="#" method="post"></form>';
 }
 
-export default class EventsList {
+export default class EditPointFormView {
   getTemplate() {
-    return createEventsListTemplate();
+    return createEditPointFormTemplate();
   }
 
   getElement() {
