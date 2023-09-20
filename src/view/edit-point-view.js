@@ -1,13 +1,13 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { formattedDate } from '../utils.js';
 
-function createEventTypeListTemplate(allTypes) {
+function createEventTypeListTemplate(index, allTypes) {
   let typeListTemplate = '';
   for (const type of allTypes) {
     typeListTemplate += `
     <div class="event__type-item">
-      <input id="event-type-${type.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
-      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-1">${type}</label>
+      <input id="event-type-${type.toLowerCase()}-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
+      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-${index}">${type}</label>
     </div>`;
   }
   return typeListTemplate;
@@ -21,38 +21,7 @@ function createCitiesListTemplate(allCities) {
   return citiesListTemplate;
 }
 
-/*function createOffersListTemplate(offers, typeOffers) {
-  const notCheckedOffers = typeOffers.filter((offer) => !offers.some((pointOffer) => pointOffer.id === offer.id));
-  let offersTemplate = '';
-
-  for (const offer of offers) {
-    offersTemplate += `
-    <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-      <label class="event__offer-label" for="event-offer-luggage-1">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </label>
-    </div>`;
-  }
-
-  for (const offer of notCheckedOffers) {
-    offersTemplate += `
-    <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage">
-      <label class="event__offer-label" for="event-offer-luggage-1">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </label>
-    </div>`;
-  }
-  return offersTemplate;
-
-}*/
-
-function createOffersListTemplate(offers, typeOffers) {
+function createOffersListTemplate(index, offers, typeOffers) {
   let offersTemplate = '';
   typeOffers.sort((a, b) => a.title.localeCompare(b.title));
 
@@ -60,8 +29,8 @@ function createOffersListTemplate(offers, typeOffers) {
     const isChecked = offers.some((pointOffer) => pointOffer.id === offer.id);
     offersTemplate += `
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isChecked ? 'checked' : ''}>
-      <label class="event__offer-label" for="event-offer-luggage-1">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title.toLowerCase().replace(/ /g, '-')}-${index}" type="checkbox" name="event-offer-${offer.title.toLowerCase().replace(/ /g, '-')}" ${isChecked ? 'checked' : ''}>
+      <label class="event__offer-label" for="event-offer-${offer.title.toLowerCase().replace(/ /g, '-')}-${index}">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
@@ -72,8 +41,8 @@ function createOffersListTemplate(offers, typeOffers) {
   return offersTemplate;
 }
 
-function createOffersTemplate(offers, typeOffers) {
-  const offersListTemplate = createOffersListTemplate(offers, typeOffers);
+function createOffersTemplate(index, offers, typeOffers) {
+  const offersListTemplate = createOffersListTemplate(index, offers, typeOffers);
 
   return (
     `<section class="event__section  event__section--offers">
@@ -112,25 +81,25 @@ function createDestinationTemplate(destination) {
   );
 }
 
-function createEditPointTemplate(point, destination, offers, typeOffers, allTypes, allCities) {
+function createEditPointTemplate(index, point, destination, offers, typeOffers, allTypes, allCities) {
   const { basePrice, dateFrom, dateTo, type } = point;
   const timeStart = formattedDate(dateFrom, 'DD/MM/YY HH:mm');
   const timeEnd = formattedDate(dateTo, 'DD/MM/YY HH:mm');
   const typeImage = type.toLowerCase();
-  const eventTypeListTemplate = createEventTypeListTemplate(allTypes);
+  const eventTypeListTemplate = createEventTypeListTemplate(index, allTypes);
   const citiesListTemplate = createCitiesListTemplate(allCities);
-  const offersTemplate = createOffersTemplate(offers, typeOffers);
+  const offersTemplate = createOffersTemplate(index, offers, typeOffers);
   const destinationTemplate = createDestinationTemplate(destination);
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
-            <label class="event__type  event__type-btn" for="event-type-toggle-1">
+            <label class="event__type  event__type-btn" for="event-type-toggle-${index}">
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${typeImage}.png" alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${index}" type="checkbox">
 
             <div class="event__type-list">
               <fieldset class="event__type-group">
@@ -141,29 +110,29 @@ function createEditPointTemplate(point, destination, offers, typeOffers, allType
           </div>
 
           <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-1">
+            <label class="event__label  event__type-output" for="event-destination-${index}">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
-            <datalist id="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-${index}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${index}">
+            <datalist id="destination-list-${index}">
               ${citiesListTemplate}
             </datalist>
           </div>
 
           <div class="event__field-group  event__field-group--time">
-            <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${timeStart}">
+            <label class="visually-hidden" for="event-start-time-${index}">From</label>
+            <input class="event__input  event__input--time" id="event-start-time-${index}" type="text" name="event-start-time" value="${timeStart}">
             &mdash;
-            <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${timeEnd}">
+            <label class="visually-hidden" for="event-end-time-${index}">To</label>
+            <input class="event__input  event__input--time" id="event-end-time-${index}" type="text" name="event-end-time" value="${timeEnd}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
-            <label class="event__label" for="event-price-1">
+            <label class="event__label" for="event-price-${index}">
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-${index}" type="text" name="event-price" value="${basePrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -182,6 +151,7 @@ function createEditPointTemplate(point, destination, offers, typeOffers, allType
 }
 
 export default class EditPointView extends AbstractView {
+  #index = null;
   #point = null;
   #destination = null;
   #offers = null;
@@ -190,8 +160,9 @@ export default class EditPointView extends AbstractView {
   #allCities = null;
   #handleCloseClick = null;
 
-  constructor({ point, destination, offers, typeOffers, allTypes, allCities, onArrowUpClick}) {
+  constructor({ index, point, destination, offers, typeOffers, allTypes, allCities, onArrowUpClick}) {
     super();
+    this.#index = index;
     this.#point = point;
     this.#destination = destination;
     this.#offers = offers;
@@ -205,7 +176,7 @@ export default class EditPointView extends AbstractView {
   }
 
   get template() {
-    return createEditPointTemplate(this.#point, this.#destination, this.#offers, this.#typeOffers, this.#allTypes, this.#allCities);
+    return createEditPointTemplate(this.#index, this.#point, this.#destination, this.#offers, this.#typeOffers, this.#allTypes, this.#allCities);
   }
 
   #closeClickHandler = (evt) => {

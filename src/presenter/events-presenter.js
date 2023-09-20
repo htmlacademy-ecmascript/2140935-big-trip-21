@@ -27,6 +27,7 @@ export default class EventsPresenter {
     render(this.#eventsListComponent, this.#eventsContainer);
     for (let i = 0; i < this.#points.length; i++) {
       new PointPresenter({
+        index: i,
         pointContainer: this.#eventsListComponent,
         point: this.#points[i],
         offersModel: this.#offersModel,

@@ -1,4 +1,4 @@
-export const POINTS_COUNT = 22;
+export const POINTS_COUNT = 20;
 
 export const POINT_DEFAULT = {
   'id': '0',
