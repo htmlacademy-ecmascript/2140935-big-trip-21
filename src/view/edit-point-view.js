@@ -21,7 +21,7 @@ function createCitiesListTemplate(allCities) {
   return citiesListTemplate;
 }
 
-function createOffersListTemplate(offers, typeOffers) {
+/*function createOffersListTemplate(offers, typeOffers) {
   const notCheckedOffers = typeOffers.filter((offer) => !offers.some((pointOffer) => pointOffer.id === offer.id));
   let offersTemplate = '';
 
@@ -50,6 +50,26 @@ function createOffersListTemplate(offers, typeOffers) {
   }
   return offersTemplate;
 
+}*/
+
+function createOffersListTemplate(offers, typeOffers) {
+  let offersTemplate = '';
+  typeOffers.sort((a, b) => a.title.localeCompare(b.title));
+
+  for (const offer of typeOffers) {
+    const isChecked = offers.some((pointOffer) => pointOffer.id === offer.id);
+    offersTemplate += `
+    <div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isChecked ? 'checked' : ''}>
+      <label class="event__offer-label" for="event-offer-luggage-1">
+        <span class="event__offer-title">${offer.title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.price}</span>
+      </label>
+    </div>`;
+  }
+
+  return offersTemplate;
 }
 
 function createOffersTemplate(offers, typeOffers) {
