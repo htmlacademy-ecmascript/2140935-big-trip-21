@@ -62,6 +62,10 @@ export default class PointPresenter {
       onArrowUpClick: () => {
         replaceEditToPoint();
         document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onFormSubmit: () => {
+        replaceEditToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
       }
     });
 
