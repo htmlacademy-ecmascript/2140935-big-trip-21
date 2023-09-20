@@ -1,10 +1,5 @@
 import { render, replace } from '../framework/render.js';
 import EditPointView from '../view/edit-point-view.js';
-import EditPointFormView from '../view/edit-point-view-form.js';
-import EditPointHeaderView from '../view/edit-point-header-view.js';
-import EditPointDetailsView from '../view/edit-point-details-view.js';
-//import EditPointOffersView from '../view/edit-point-offers-view.js';
-//import EditPointDestinationView from '../view/edit-point-destination-view.js';
 import PointView from '../view/point-view.js';
 
 export default class PointPresenter {
@@ -12,11 +7,6 @@ export default class PointPresenter {
   #point = null;
   #offersModel = null;
   #destinationsModel = null;
-
-  #editPointComponent = new EditPointView();
-  #editPointFormComponent = new EditPointFormView();
-  #editPointDetailsComponent = new EditPointDetailsView();
-
   #offers = [];
   #typeOffers = [];
   #allTypes = [];
@@ -36,11 +26,10 @@ export default class PointPresenter {
     this.#allTypes = [...this.#offersModel.allTypes];
     this.#destination = this.#destinationsModel.getDestination(this.#point.destination);
     this.#allCities = [...this.#destinationsModel.allCities];
-
-    this.#renderPoint(this.#point, this.#destinationsModel.getDestination(this.#point.destination), this.#offersModel.getOffersById(this.#point.offers), this.#allTypes, this.#allCities);
+    this.#renderPoint(this.#point, this.#destinationsModel.getDestination(this.#point.destination), this.#offersModel.getOffersById(this.#point.offers), this.#typeOffers, this.#allTypes, this.#allCities);
   }
 
-  #renderPoint(point, destination, offers, allTypes, allCities) {
+  #renderPoint(point, destination, offers, typeOffers, allTypes, allCities) {
 
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
@@ -60,9 +49,11 @@ export default class PointPresenter {
       }
     });
 
-    const editComponent = new EditPointHeaderView({
+    const editComponent = new EditPointView({
       point,
       destination,
+      offers,
+      typeOffers,
       allTypes,
       allCities,
       onArrowUpClick: () => {
@@ -82,16 +73,3 @@ export default class PointPresenter {
     render(pointComponent, this.#pointContainer.element);
   }
 }
-
-/*
-    render(this.#editPointComponent, this.#pointContainer.element);
-    render(this.#editPointFormComponent, this.#editPointComponent.element);
-    render(new EditPointHeaderView({ point: this.#point, destination: this.#destination, allTypes: this.#allTypes, allCities: this.#allCities }), this.#editPointFormComponent.element);
-    render(this.#editPointDetailsComponent, this.#editPointFormComponent.element);
-    if ((this.#typeOffers.length > 0)) {
-      render(new EditPointOffersView({ offers: this.#offers, typeOffers: this.#typeOffers }), this.#editPointDetailsComponent.element);
-    }
-    if (this.#destination.description) {
-      render(new EditPointDestinationView({ destination: this.#destination }), this.#editPointDetailsComponent.element);
-    }
-*/
