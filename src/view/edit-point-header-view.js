@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { formattedDate } from '../utils.js';
 
 function createEventTypeListTemplate(allTypes) {
@@ -81,27 +81,31 @@ function createEditPointHeaderTemplate(point, destination, allTypes, allCities) 
   );
 }
 
-export default class EditPointHeaderView {
-  constructor({ point, destination, allTypes, allCities }) {
-    this.point = point;
-    this.destination = destination;
-    this.allTypes = allTypes;
-    this.allCities = allCities;
+export default class EditPointHeaderView extends AbstractView {
+  #point = null;
+  #destination = null;
+  #allTypes = null;
+  #allCities = null;
+  #handleCloseClick = null;
+
+  constructor({ point, destination, allTypes, allCities, onArrowUpClick}) {
+    super();
+    this.#point = point;
+    this.#destination = destination;
+    this.#allTypes = allTypes;
+    this.#allCities = allCities;
+    this.#handleCloseClick = onArrowUpClick;
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#closeClickHandler);
   }
 
-  getTemplate() {
-    return createEditPointHeaderTemplate(this.point, this.destination, this.allTypes, this.allCities);
+  get template() {
+    return createEditPointHeaderTemplate(this.#point, this.#destination, this.#allTypes, this.#allCities);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleCloseClick();
+  };
 }

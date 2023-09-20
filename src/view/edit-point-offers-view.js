@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createOffersTemplate(offers, typeOffers) {
   const notCheckedOffers = typeOffers.filter((offer) => !offers.some((pointOffer) => pointOffer.id === offer.id));
@@ -44,25 +44,17 @@ function createEditPointOffersTemplate(offers, typeOffers) {
   );
 }
 
-export default class EditPointOffersView {
+export default class EditPointOffersView extends AbstractView {
+  #offers = null;
+  #typeOffers = null;
+
   constructor({ offers, typeOffers }) {
-    this.offers = offers;
-    this.typeOffers = typeOffers;
+    super();
+    this.#offers = offers;
+    this.#typeOffers = typeOffers;
   }
 
-  getTemplate() {
-    return createEditPointOffersTemplate(this.offers, this.typeOffers);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createEditPointOffersTemplate(this.#offers, this.#typeOffers);
   }
 }

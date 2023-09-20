@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createImageTemplate(pictures) {
   let imageTemplate = '';
@@ -27,24 +27,16 @@ function createEditPointDestinationTemplate(destination) {
   );
 }
 
-export default class EditPointDestinationView {
+export default class EditPointDestinationView extends AbstractView {
+  #destination = null;
+
   constructor({ destination }) {
-    this.destination = destination;
+    super();
+    this.#destination = destination;
   }
 
-  getTemplate() {
-    return createEditPointDestinationTemplate(this.destination);
+  get template() {
+    return createEditPointDestinationTemplate(this.#destination);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }
