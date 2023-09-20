@@ -42,16 +42,19 @@ function createOffersListTemplate(index, offers, typeOffers) {
 }
 
 function createOffersTemplate(index, offers, typeOffers) {
-  const offersListTemplate = createOffersListTemplate(index, offers, typeOffers);
-
-  return (
-    `<section class="event__section  event__section--offers">
-      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-      <div class="event__available-offers">
-        ${offersListTemplate}
-      </div>
-    </section>`
-  );
+  if (!typeOffers || typeOffers.length === 0) {
+    return '';
+  } else {
+    const offersListTemplate = createOffersListTemplate(index, offers, typeOffers);
+    return (
+      `<section class="event__section  event__section--offers">
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+          ${offersListTemplate}
+        </div>
+      </section>`
+    );
+  }
 }
 
 function createImageTemplate(pictures) {
@@ -66,19 +69,23 @@ function createImageTemplate(pictures) {
 }
 
 function createDestinationTemplate(destination) {
-  const imageTemplate = createImageTemplate(destination.pictures);
+  if (!destination.description) {
+    return '';
+  } else {
+    const imageTemplate = createImageTemplate(destination.pictures);
 
-  return (
-    `<section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destination.description}</p>
-      <div class="event__photos-container">
-        <div class="event__photos-tape">
-          ${imageTemplate}
+    return (
+      `<section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        <p class="event__destination-description">${destination.description}</p>
+        <div class="event__photos-container">
+          <div class="event__photos-tape">
+            ${imageTemplate}
+          </div>
         </div>
-      </div>
-    </section>`
-  );
+      </section>`
+    );
+  }
 }
 
 function createEditPointTemplate(index, point, destination, offers, typeOffers, allTypes, allCities) {
