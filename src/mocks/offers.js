@@ -1,4 +1,4 @@
-import { getRandomTenInteger } from '../utils';
+import { getRandomTenInteger } from '../utils/common.js';
 
 export const offers = [
   {

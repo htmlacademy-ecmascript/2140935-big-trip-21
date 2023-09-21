@@ -22,7 +22,10 @@ export default class EventsPresenter {
 
   init() {
     this.#points = [...this.#pointsModel.points];
+    this.#renderEvents();
+  }
 
+  #renderEvents() {
     render(new SortView(), this.#eventsContainer);
     render(this.#eventsListComponent, this.#eventsContainer);
     for (let i = 0; i < this.#points.length; i++) {

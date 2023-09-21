@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formattedDate } from '../utils.js';
+import { formattedDate } from '../utils/task.js';
 
 function createEventTypeListTemplate(index, allTypes) {
   let typeListTemplate = '';

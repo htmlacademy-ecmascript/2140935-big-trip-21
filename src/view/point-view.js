@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formattedDate, getTimeInterval, formatTimeInterval } from '../utils.js';
+import { formattedDate, getTimeInterval, formatTimeInterval } from '../utils/task.js';
 
 function createOffersTemplate(offers) {
   let offersTemplate = '';
