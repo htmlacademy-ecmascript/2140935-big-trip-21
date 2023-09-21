@@ -1,4 +1,4 @@
-import { getRandomInteger } from '../utils';
+import { getRandomInteger } from '../utils/common.js';
 
 export const IMAGE_URL = 'https://loremflickr.com/248/152?random=';
 

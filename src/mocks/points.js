@@ -1,4 +1,4 @@
-import { getRandomArrayElement, getRandomInteger, getRandomTenInteger, generateRandomDate, getRandomBoolean, getRandomArray } from '../utils.js';
+import { getRandomArrayElement, getRandomInteger, getRandomTenInteger, generateRandomDate, getRandomBoolean, getRandomArray } from '../utils/common.js';
 import { offers } from './offers.js';
 
 const TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
