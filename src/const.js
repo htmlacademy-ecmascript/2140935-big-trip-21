@@ -14,3 +14,10 @@ export const POINT_DEFAULT = {
   'offers': [],
   'type': 'Flight'
 };
+
+export const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+};

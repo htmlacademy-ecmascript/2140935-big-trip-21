@@ -15,14 +15,14 @@ for (let i = 0; i < 20; i++) {
   const type = getRandomArrayElement(TYPES);
   const { startDate, endDate } = generateRandomDate();
   const point = {
-    'id': i + 1,
-    'basePrice': getRandomTenInteger(100, 3000),
-    'dateFrom': startDate.toISOString(),
-    'dateTo': endDate.toISOString(),
-    'destination': getRandomInteger(1, 5),
-    'isFavorite': getRandomBoolean(),
-    'offers': getRandomArray(getOffersForType(type)),
-    'type': type
+    id: i + 1,
+    basePrice: getRandomTenInteger(100, 3000),
+    dateFrom: startDate.toISOString(),
+    dateTo: endDate.toISOString(),
+    destination: getRandomInteger(1, 5),
+    isFavorite: getRandomBoolean(),
+    offers: getRandomArray(getOffersForType(type)),
+    type: type
   };
   mockPoints.push(point);
 }
