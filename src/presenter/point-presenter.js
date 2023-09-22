@@ -3,7 +3,6 @@ import EditPointView from '../view/edit-point-view.js';
 import PointView from '../view/point-view.js';
 
 export default class PointPresenter {
-  #index = null;
   #pointContainer = null;
   #point = null;
   #offersModel = null;
@@ -14,8 +13,7 @@ export default class PointPresenter {
   #destination = [];
   #allCities = [];
 
-  constructor({index, pointContainer, point, offersModel, destinationsModel}) {
-    this.#index = index;
+  constructor({pointContainer, point, offersModel, destinationsModel}) {
     this.#pointContainer = pointContainer;
     this.#point = point;
     this.#offersModel = offersModel;
@@ -28,10 +26,10 @@ export default class PointPresenter {
     this.#allTypes = [...this.#offersModel.allTypes];
     this.#destination = this.#destinationsModel.getDestination(this.#point.destination);
     this.#allCities = [...this.#destinationsModel.allCities];
-    this.#renderPoint(this.#index, this.#point, this.#destinationsModel.getDestination(this.#point.destination), this.#offersModel.getOffersById(this.#point.offers), this.#typeOffers, this.#allTypes, this.#allCities);
+    this.#renderPoint(this.#point, this.#destinationsModel.getDestination(this.#point.destination), this.#offersModel.getOffersById(this.#point.offers), this.#typeOffers, this.#allTypes, this.#allCities);
   }
 
-  #renderPoint(index, point, destination, offers, typeOffers, allTypes, allCities) {
+  #renderPoint(point, destination, offers, typeOffers, allTypes, allCities) {
 
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
@@ -52,7 +50,6 @@ export default class PointPresenter {
     });
 
     const editComponent = new EditPointView({
-      index,
       point,
       destination,
       offers,

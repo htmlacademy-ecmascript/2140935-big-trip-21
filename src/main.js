@@ -13,7 +13,7 @@ const pointsModel = new PointsModel();
 const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 const mainPresenter = new MainPresenter({
-  eventsContainer: siteMainElement,
+  pointsContainer: siteMainElement,
   pointsModel,
   offersModel,
   destinationsModel
