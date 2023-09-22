@@ -21,12 +21,12 @@ export default class PointPresenter {
   }
 
   init() {
-    this.#offers = [...this.#offersModel.getOffersById(this.#point.offers)];
-    this.#typeOffers = [...this.#offersModel.getOffersByType(this.#point.type)];
-    this.#allTypes = [...this.#offersModel.allTypes];
+    this.#offers = this.#offersModel.getOffersById(this.#point.offers);
+    this.#typeOffers = this.#offersModel.getOffersByType(this.#point.type);
+    this.#allTypes = this.#offersModel.allTypes;
     this.#destination = this.#destinationsModel.getDestination(this.#point.destination);
-    this.#allCities = [...this.#destinationsModel.allCities];
-    this.#renderPoint(this.#point, this.#destinationsModel.getDestination(this.#point.destination), this.#offersModel.getOffersById(this.#point.offers), this.#typeOffers, this.#allTypes, this.#allCities);
+    this.#allCities = this.#destinationsModel.allCities;
+    this.#renderPoint(this.#point, this.#destination, this.#offers, this.#typeOffers, this.#allTypes, this.#allCities);
   }
 
   #renderPoint(point, destination, offers, typeOffers, allTypes, allCities) {
