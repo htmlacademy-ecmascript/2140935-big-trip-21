@@ -1,4 +1,12 @@
 import dayjs from 'dayjs';
+import {FILTER_TYPE} from '../const';
+
+export const filter = {
+  [FILTER_TYPE.EVERYTHING]: (points) => points,
+  [FILTER_TYPE.FUTURE]: (points) => points.filter((point) => new Date(point.dateFrom) > new Date()),
+  [FILTER_TYPE.PRESENT]: (points) => points.filter((point) => new Date(point.dateFrom) <= new Date() && new Date(point.dateTo) >= new Date()),
+  [FILTER_TYPE.PAST]: (points) => points.filter((point) => new Date(point.dateTo) < new Date()),
+};
 
 export function formattedDate(inputDate, format) {
   return dayjs(inputDate).format(format);

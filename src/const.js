@@ -15,7 +15,7 @@ export const POINT_DEFAULT = {
   'type': 'Flight'
 };
 
-export const FilterType = {
+export const FILTER_TYPE = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
