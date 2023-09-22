@@ -1,5 +1,9 @@
 export const POINTS_COUNT = 20;
 
+export const DAY_FORMAT = 'MMM DD';
+
+export const TIME_FORMAT = 'HH:mm';
+
 export const POINT_DEFAULT = {
   'id': '0',
   'basePrice': 0,
