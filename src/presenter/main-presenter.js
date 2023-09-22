@@ -1,20 +1,20 @@
 import {render} from '../framework/render.js';
-import EventsList from '../view/events-list-view.js';
+import PointsListView from '../view/points-list-view.js';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
 
-export default class EventsPresenter {
-  #eventsContainer = null;
+export default class MainPresenter {
+  #pointsContainer = null;
   #pointsModel = null;
   #offersModel = null;
   #destinationsModel = null;
 
-  #eventsListComponent = new EventsList();
+  #pointsListComponent = new PointsListView();
 
   #points = [];
 
-  constructor({ eventsContainer, pointsModel, offersModel, destinationsModel }) {
-    this.#eventsContainer = eventsContainer;
+  constructor({ pointsContainer, pointsModel, offersModel, destinationsModel }) {
+    this.#pointsContainer = pointsContainer;
     this.#pointsModel = pointsModel;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
@@ -22,16 +22,16 @@ export default class EventsPresenter {
 
   init() {
     this.#points = [...this.#pointsModel.points];
-    this.#renderEvents();
+    this.#renderPoints();
   }
 
-  #renderEvents() {
-    render(new SortView(), this.#eventsContainer);
-    render(this.#eventsListComponent, this.#eventsContainer);
+  #renderPoints() {
+    render(new SortView(), this.#pointsContainer);
+    render(this.#pointsListComponent, this.#pointsContainer);
     for (let i = 0; i < this.#points.length; i++) {
       new PointPresenter({
         index: i,
-        pointContainer: this.#eventsListComponent,
+        pointContainer: this.#pointsListComponent,
         point: this.#points[i],
         offersModel: this.#offersModel,
         destinationsModel: this.#destinationsModel
