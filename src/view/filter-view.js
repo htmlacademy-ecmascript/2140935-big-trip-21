@@ -1,30 +1,32 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { FILTER_TYPE } from '../const.js';
+
+function createFilterItemTemplate(filterType) {
+  return (
+    `<div class="trip-filters__filter">
+      <input id="filter-${filterType}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterType}">
+      <label class="trip-filters__filter-label" for="filter-${filterType}">${filterType}</label>
+    </div>`
+  );
+}
+
+function createFiltersItemsTemplate() {
+  let filtersItemsTemplate = '';
+  for (const key in FILTER_TYPE) {
+    if (FILTER_TYPE.hasOwnProperty.call(FILTER_TYPE, key)) {
+      filtersItemsTemplate += createFilterItemTemplate(FILTER_TYPE[key]);
+    }
+  }
+  return filtersItemsTemplate;
+}
 
 function createFilterTemplate() {
+  const filtersItemsTemplate = createFiltersItemsTemplate();
   return (
     `<form class="trip-filters" action="#" method="get">
-        <div class="trip-filters__filter">
-          <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything">
-          <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-        </div>
-
-        <div class="trip-filters__filter">
-          <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-          <label class="trip-filters__filter-label" for="filter-future">Future</label>
-        </div>
-
-        <div class="trip-filters__filter">
-          <input id="filter-present" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="present">
-          <label class="trip-filters__filter-label" for="filter-present">Present</label>
-        </div>
-
-        <div class="trip-filters__filter">
-          <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" checked>
-          <label class="trip-filters__filter-label" for="filter-past">Past</label>
-        </div>
-
-        <button class="visually-hidden" type="submit">Accept filter</button>
-      </form>`
+      ${filtersItemsTemplate}
+      <button class="visually-hidden" type="submit">Accept filter</button>
+    </form>`
   );
 }
 
