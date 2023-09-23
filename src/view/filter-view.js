@@ -30,10 +30,10 @@ export default class FilterView extends AbstractView {
   constructor({onFilterChange}) {
     super();
     this.#handleFilterChange = onFilterChange;
-    const element = this.element.querySelector('.trip-filters');
+    const filterElement = this.element.querySelector('.trip-filters');
 
-    if (element) {
-      element.addEventListener('change', this.#filterChangeHandler);
+    if (filterElement) {
+      filterElement.addEventListener('change', this.#filterChangeHandler);
     }
   }
 
