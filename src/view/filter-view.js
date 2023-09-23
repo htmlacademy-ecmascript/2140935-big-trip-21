@@ -11,13 +11,7 @@ function createFilterItemTemplate(filterType) {
 }
 
 function createFiltersItemsTemplate() {
-  let filtersItemsTemplate = '';
-  for (const key in FILTER_TYPE) {
-    if (FILTER_TYPE.hasOwnProperty.call(FILTER_TYPE, key)) {
-      filtersItemsTemplate += createFilterItemTemplate(FILTER_TYPE[key]);
-    }
-  }
-  return filtersItemsTemplate;
+  return Object.values(FILTER_TYPE).map((value) => createFilterItemTemplate(value)).join('');
 }
 
 function createFilterTemplate() {
@@ -31,7 +25,24 @@ function createFilterTemplate() {
 }
 
 export default class FilterView extends AbstractView {
+  #handleFilterChange = null;
+
+  constructor({onFilterChange}) {
+    super();
+    this.#handleFilterChange = onFilterChange;
+    const element = this.element.querySelector('.trip-filters');
+
+    if (element) {
+      element.addEventListener('change', this.#filterChangeHandler);
+    }
+  }
+
   get template() {
     return createFilterTemplate();
   }
+
+  #filterChangeHandler = (evt) => {
+    const filterValue = evt.target.value;
+    this.#handleFilterChange(filterValue);
+  };
 }
