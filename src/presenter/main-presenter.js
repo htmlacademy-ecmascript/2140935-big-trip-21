@@ -30,13 +30,14 @@ export default class MainPresenter {
   }
 
   #renderPoints() {
-    render(new FilterView({
+    const filterView = new FilterView({
       onFilterChange: (filterValue) => {
         this.#filterType = filterValue;
         this.#points = this.#pointsModel.filteredPoints(this.#filterType);
         this.#renderPoints();
       },
-    }), this.#siteTripControlsElement);
+    });
+    render(filterView, this.#siteTripControlsElement);
     render(new SortView(), this.#pointsContainer);
     render(this.#pointsListComponent, this.#pointsContainer);
     for (const point of this.#points) {
