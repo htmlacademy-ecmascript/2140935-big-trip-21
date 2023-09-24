@@ -2,6 +2,7 @@ import {render} from '../framework/render.js';
 import PointsListView from '../view/points-list-view.js';
 import SortView from '../view/sort-view.js';
 import FilterView from '../view/filter-view.js';
+import ListEmptyView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import { FILTER_TYPE } from '../const.js';
 
@@ -16,6 +17,7 @@ export default class MainPresenter {
   #pointsListComponent = new PointsListView();
 
   #points = [];
+  #pointPresenters = [];
 
   constructor({ pointsContainer, pointsModel, offersModel, destinationsModel }) {
     this.#pointsContainer = pointsContainer;
@@ -26,27 +28,41 @@ export default class MainPresenter {
 
   init() {
     this.#points = this.#pointsModel.filteredPoints(this.#filterType);
+    this.#renderFilter();
     this.#renderPoints();
   }
 
-  #renderPoints() {
+  #renderFilter() {
     const filterView = new FilterView({
       onFilterChange: (filterValue) => {
+        this.#removePoints();
         this.#filterType = filterValue;
         this.#points = this.#pointsModel.filteredPoints(this.#filterType);
         this.#renderPoints();
       },
     });
     render(filterView, this.#siteTripControlsElement);
-    render(new SortView(), this.#pointsContainer);
-    render(this.#pointsListComponent, this.#pointsContainer);
-    for (const point of this.#points) {
-      new PointPresenter({
-        pointContainer: this.#pointsListComponent,
-        point,
-        offersModel: this.#offersModel,
-        destinationsModel: this.#destinationsModel
-      }).init();
+  }
+
+  #renderPoints() {
+    if (this.#points.length === 0) {
+      render(new ListEmptyView({filterType: this.#filterType}), this.#pointsContainer);
+    } else {
+      render(new SortView(), this.#pointsContainer);
+      render(this.#pointsListComponent, this.#pointsContainer);
+      for (const point of this.#points) {
+        new PointPresenter({
+          pointContainer: this.#pointsListComponent,
+          point,
+          offersModel: this.#offersModel,
+          destinationsModel: this.#destinationsModel
+        }).init();
+      }
     }
+  }
+
+  #removePoints() {
+    this.#pointPresenters.forEach((presenter) => presenter.removeElement());
+    this.#pointPresenters = [];
   }
 }
