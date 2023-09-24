@@ -19,7 +19,8 @@ function createListEmptyTemplate(filterType) {
   }
 
   return (
-    `<h2 class="visually-hidden">Trip events</h2>
+    `<!--<h2 class="visually-hidden">Trip events</h2>-->
+
     <p class="trip-events__msg">${emptyText}</p>`
   );
 }

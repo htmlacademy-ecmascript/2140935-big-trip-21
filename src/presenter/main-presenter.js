@@ -13,11 +13,14 @@ export default class MainPresenter {
   #destinationsModel = null;
   #filterType = FILTER_TYPE.EVERYTHING;
   #siteTripControlsElement = document.querySelector('.trip-controls__filters');
+  #sortView = null;
+  #listEmptyView = null;
+  #pointElement = null;
 
   #pointsListComponent = new PointsListView();
 
   #points = [];
-  #pointPresenters = [];
+  #pointsElements = [];
 
   constructor({ pointsContainer, pointsModel, offersModel, destinationsModel }) {
     this.#pointsContainer = pointsContainer;
@@ -35,9 +38,9 @@ export default class MainPresenter {
   #renderFilter() {
     const filterView = new FilterView({
       onFilterChange: (filterValue) => {
-        this.#removePoints();
         this.#filterType = filterValue;
         this.#points = this.#pointsModel.filteredPoints(this.#filterType);
+        this.#clearPoints();
         this.#renderPoints();
       },
     });
@@ -46,23 +49,41 @@ export default class MainPresenter {
 
   #renderPoints() {
     if (this.#points.length === 0) {
-      render(new ListEmptyView({filterType: this.#filterType}), this.#pointsContainer);
+      this.#listEmptyView = new ListEmptyView({filterType: this.#filterType});
+      render(this.#listEmptyView, this.#pointsContainer);
     } else {
-      render(new SortView(), this.#pointsContainer);
+      this.#sortView = new SortView();
+      render(this.#sortView , this.#pointsContainer);
       render(this.#pointsListComponent, this.#pointsContainer);
       for (const point of this.#points) {
         new PointPresenter({
           pointContainer: this.#pointsListComponent,
           point,
           offersModel: this.#offersModel,
-          destinationsModel: this.#destinationsModel
+          destinationsModel: this.#destinationsModel,
+          returnPointElement: (pointElement) => {
+            this.#pointElement = pointElement;
+          },
         }).init();
+        this.#pointsElements.push(this.#pointElement);
       }
     }
   }
 
-  #removePoints() {
-    this.#pointPresenters.forEach((presenter) => presenter.removeElement());
-    this.#pointPresenters = [];
+  #clearPoints() {
+    if (this.#listEmptyView) {
+      this.#listEmptyView.element.remove();
+    }
+    if (this.#sortView) {
+      this.#sortView.element.remove();
+    }
+    if (this.#pointsElements.length !== 0) {
+      for (const pointElement of this.#pointsElements) {
+        pointElement.element.remove();
+      }
+    }
   }
+
 }
+
+

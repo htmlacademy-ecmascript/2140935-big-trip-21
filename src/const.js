@@ -1,4 +1,4 @@
-export const POINTS_COUNT = 20;
+export const POINTS_COUNT = 10;
 
 export const DAY_FORMAT = 'MMM DD';
 

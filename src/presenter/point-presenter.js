@@ -7,17 +7,19 @@ export default class PointPresenter {
   #point = null;
   #offersModel = null;
   #destinationsModel = null;
+  #returnPointElement = null;
   #offers = [];
   #typeOffers = [];
   #allTypes = [];
   #destination = [];
   #allCities = [];
 
-  constructor({pointContainer, point, offersModel, destinationsModel}) {
+  constructor({pointContainer, point, offersModel, destinationsModel, returnPointElement}) {
     this.#pointContainer = pointContainer;
     this.#point = point;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
+    this.#returnPointElement = returnPointElement;
   }
 
   init() {
@@ -48,6 +50,8 @@ export default class PointPresenter {
         document.addEventListener('keydown', escKeyDownHandler);
       }
     });
+
+    this.#returnPointElement(pointComponent);
 
     const editComponent = new EditPointView({
       point,
