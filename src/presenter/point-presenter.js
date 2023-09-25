@@ -7,19 +7,19 @@ export default class PointPresenter {
   #point = null;
   #offersModel = null;
   #destinationsModel = null;
-  #returnPointElement = null;
+  #returnPointComponent = null;
   #offers = [];
   #typeOffers = [];
   #allTypes = [];
   #destination = [];
   #allCities = [];
 
-  constructor({pointContainer, point, offersModel, destinationsModel, returnPointElement}) {
+  constructor({pointContainer, point, offersModel, destinationsModel, returnPointComponent}) {
     this.#pointContainer = pointContainer;
     this.#point = point;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
-    this.#returnPointElement = returnPointElement;
+    this.#returnPointComponent = returnPointComponent;
   }
 
   init() {
@@ -51,8 +51,6 @@ export default class PointPresenter {
       }
     });
 
-    this.#returnPointElement(pointComponent);
-
     const editComponent = new EditPointView({
       point,
       destination,
@@ -69,6 +67,8 @@ export default class PointPresenter {
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     });
+
+    this.#returnPointComponent(pointComponent, editComponent);
 
     function replacePointToEdit() {
       replace(editComponent, pointComponent);

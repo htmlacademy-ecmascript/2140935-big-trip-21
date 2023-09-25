@@ -1,4 +1,4 @@
-import {render} from '../framework/render.js';
+import {render, remove} from '../framework/render.js';
 import PointsListView from '../view/points-list-view.js';
 import SortView from '../view/sort-view.js';
 import FilterView from '../view/filter-view.js';
@@ -15,12 +15,14 @@ export default class MainPresenter {
   #siteTripControlsElement = document.querySelector('.trip-controls__filters');
   #sortView = null;
   #listEmptyView = null;
-  #pointElement = null;
+  #pointComponent = null;
+  #editComponent = null;
 
   #pointsListComponent = new PointsListView();
 
   #points = [];
-  #pointsElements = [];
+  #pointsComponents = new Map();
+  #editComponents = new Map();
 
   constructor({ pointsContainer, pointsModel, offersModel, destinationsModel }) {
     this.#pointsContainer = pointsContainer;
@@ -40,7 +42,7 @@ export default class MainPresenter {
       onFilterChange: (filterValue) => {
         this.#filterType = filterValue;
         this.#points = this.#pointsModel.filteredPoints(this.#filterType);
-        this.#clearPoints();
+        this.#clear();
         this.#renderPoints();
       },
     });
@@ -56,30 +58,38 @@ export default class MainPresenter {
       render(this.#sortView , this.#pointsContainer);
       render(this.#pointsListComponent, this.#pointsContainer);
       for (const point of this.#points) {
-        new PointPresenter({
+        const pointPresenter = new PointPresenter({
           pointContainer: this.#pointsListComponent,
           point,
           offersModel: this.#offersModel,
           destinationsModel: this.#destinationsModel,
-          returnPointElement: (pointElement) => {
-            this.#pointElement = pointElement;
+          returnPointComponent: (pointComponent, editComponent) => {
+            this.#pointComponent = pointComponent;
+            this.#editComponent = editComponent;
           },
-        }).init();
-        this.#pointsElements.push(this.#pointElement);
+        });
+        pointPresenter.init();
+        this.#pointsComponents.set(point.id, this.#pointComponent);
+        this.#editComponents.set(point.id, this.#editComponent);
       }
     }
   }
 
-  #clearPoints() {
+  #clear() {
     if (this.#listEmptyView) {
-      this.#listEmptyView.element.remove();
+      remove(this.#listEmptyView);
     }
     if (this.#sortView) {
-      this.#sortView.element.remove();
+      remove(this.#sortView);
     }
-    if (this.#pointsElements.length !== 0) {
-      for (const pointElement of this.#pointsElements) {
-        pointElement.element.remove();
+    if (this.#pointsComponents.size !== 0) {
+      for (const pointComponent of this.#pointsComponents.values()) {
+        remove(pointComponent);
+      }
+    }
+    if (this.#editComponents.size !== 0) {
+      for (const editComponent of this.#editComponents.values()) {
+        remove(editComponent);
       }
     }
   }
