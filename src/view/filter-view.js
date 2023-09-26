@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { FILTER_TYPE } from '../const.js';
+import { FilterType } from '../const.js';
 
 function createFilterItemTemplate(filterType) {
   return (
@@ -11,7 +11,7 @@ function createFilterItemTemplate(filterType) {
 }
 
 function createFiltersItemsTemplate() {
-  return Object.values(FILTER_TYPE).map((value) => createFilterItemTemplate(value)).join('');
+  return Object.values(FilterType).map((value) => createFilterItemTemplate(value)).join('');
 }
 
 function createFilterTemplate() {

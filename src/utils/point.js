@@ -1,15 +1,30 @@
 import dayjs from 'dayjs';
-import {FILTER_TYPE} from '../const';
+import {FilterType} from '../const';
 
 export const filter = {
-  [FILTER_TYPE.EVERYTHING]: (points) => points,
-  [FILTER_TYPE.FUTURE]: (points) => points.filter((point) => new Date(point.dateFrom) > new Date()),
-  [FILTER_TYPE.PRESENT]: (points) => points.filter((point) => new Date(point.dateFrom) <= new Date() && new Date(point.dateTo) >= new Date()),
-  [FILTER_TYPE.PAST]: (points) => points.filter((point) => new Date(point.dateTo) < new Date()),
+  [FilterType.EVERYTHING]: (points) => points,
+  [FilterType.FUTURE]: (points) => points.filter((point) => new Date(point.dateFrom) > new Date()),
+  [FilterType.PRESENT]: (points) => points.filter((point) => new Date(point.dateFrom) <= new Date() && new Date(point.dateTo) >= new Date()),
+  [FilterType.PAST]: (points) => points.filter((point) => new Date(point.dateTo) < new Date()),
 };
 
 export function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
+}
+
+export function sortDay(pointA, pointB) {
+  return dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
+}
+
+export function sortTime(pointA, pointB) {
+  const durationA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+  const durationB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
+
+  return durationB - durationA;
+}
+
+export function sortPrice(pointA, pointB) {
+  return pointB.basePrice - pointA.basePrice;
 }
 
 export function formattedDate(inputDate, format) {
