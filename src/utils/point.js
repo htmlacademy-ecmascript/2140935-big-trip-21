@@ -12,6 +12,21 @@ export function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
+export function sortDay(pointA, pointB) {
+  return dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
+}
+
+export function sortTime(pointA, pointB) {
+  const durationA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+  const durationB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
+
+  return durationB - durationA;
+}
+
+export function sortPrice(pointA, pointB) {
+  return pointB.basePrice - pointA.basePrice;
+}
+
 export function formattedDate(inputDate, format) {
   return dayjs(inputDate).format(format);
 }

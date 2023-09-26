@@ -1,4 +1,4 @@
-export const POINTS_COUNT = 20;
+export const POINTS_COUNT = 4;
 
 export const DAY_FORMAT = 'MMM DD';
 
@@ -23,7 +23,7 @@ export const FilterType = {
 };
 
 export const SortType = {
-  DEFAULT: 'default',
-  DATE_DOWN: 'date-down',
-  DATE_UP: 'date-up',
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price',
 };
