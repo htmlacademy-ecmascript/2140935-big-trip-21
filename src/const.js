@@ -1,4 +1,4 @@
-export const POINTS_COUNT = 3;
+export const POINTS_COUNT = 20;
 
 export const DAY_FORMAT = 'MMM DD';
 
@@ -15,9 +15,15 @@ export const POINT_DEFAULT = {
   type: 'Flight'
 };
 
-export const FILTER_TYPE = {
+export const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
+};
+
+export const SortType = {
+  DEFAULT: 'default',
+  DATE_DOWN: 'date-down',
+  DATE_UP: 'date-up',
 };

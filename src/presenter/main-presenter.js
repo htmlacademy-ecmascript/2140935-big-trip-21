@@ -4,14 +4,14 @@ import SortView from '../view/sort-view.js';
 import FilterView from '../view/filter-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
-import { FILTER_TYPE } from '../const.js';
+import { FilterType } from '../const.js';
 
 export default class MainPresenter {
   #pointsContainer = null;
   #pointsModel = null;
   #offersModel = null;
   #destinationsModel = null;
-  #filterType = FILTER_TYPE.EVERYTHING;
+  #filterType = FilterType.EVERYTHING;
   #siteTripControlsElement = document.querySelector('.trip-controls__filters');
   #sortView = null;
   #listEmptyView = null;

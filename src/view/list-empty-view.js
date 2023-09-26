@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view';
-import { FILTER_TYPE } from '../const';
+import { FilterType } from '../const';
 
 function createListEmptyTemplate(filterType) {
   let emptyText = '';
@@ -26,7 +26,7 @@ function createListEmptyTemplate(filterType) {
 }
 
 export default class ListEmptyView extends AbstractView {
-  #filterType = FILTER_TYPE.EVERYTHING;
+  #filterType = FilterType.EVERYTHING;
 
   constructor({filterType}) {
     super();
