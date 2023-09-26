@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formattedDate, getTimeInterval, formatTimeInterval } from '../utils/task.js';
+import { formattedDate, getTimeInterval, formatTimeInterval } from '../utils/point.js';
+import { DAY_FORMAT, TIME_FORMAT } from '../const.js';
 
 function createOffersTemplate(offers) {
   let offersTemplate = '';
@@ -16,9 +17,9 @@ function createOffersTemplate(offers) {
 
 function createPointTemplate(point, destination, offers) {
   const { basePrice, dateFrom, dateTo, isFavorite, type } = point;
-  const day = formattedDate(dateFrom, 'MMM DD');
-  const timeStart = formattedDate(dateFrom, 'HH:mm');
-  const timeEnd = formattedDate(dateTo, 'HH:mm');
+  const day = formattedDate(dateFrom, DAY_FORMAT);
+  const timeStart = formattedDate(dateFrom, TIME_FORMAT);
+  const timeEnd = formattedDate(dateTo, TIME_FORMAT);
   const intervalMm = getTimeInterval (dateFrom, dateTo);
   const intervalHhMm = formatTimeInterval (intervalMm);
   const typeImage = type.toLowerCase();
@@ -66,16 +67,20 @@ export default class PointView extends AbstractView {
   #destination = null;
   #offers = null;
   #handleEditClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({ point, destination, offers, onArrowDownClick }) {
+  constructor({ point, destination, offers, onArrowDownClick, onFavoriteClick }) {
     super();
     this.#point = point;
     this.#destination = destination;
     this.#offers = offers;
     this.#handleEditClick = onArrowDownClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
@@ -85,5 +90,10 @@ export default class PointView extends AbstractView {
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleEditClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }

@@ -39,8 +39,8 @@ export function getRandomBoolean() {
 
 export function generateRandomDate() {
   const year = 2023;
-  const month = 7;
-  const day = getRandomInteger(26, 27);
+  const month = 8;
+  const day = getRandomInteger(20, 28);
   const hours = getRandomInteger(11, 17);
   const minutes = getRandomInteger(0, 59);
 
