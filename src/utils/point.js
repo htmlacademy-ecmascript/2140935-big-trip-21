@@ -8,6 +8,10 @@ export const filter = {
   [FILTER_TYPE.PAST]: (points) => points.filter((point) => new Date(point.dateTo) < new Date()),
 };
 
+export function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
 export function formattedDate(inputDate, format) {
   return dayjs(inputDate).format(format);
 }

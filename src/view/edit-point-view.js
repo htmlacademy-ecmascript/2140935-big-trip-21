@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formattedDate } from '../utils/task.js';
+import { formattedDate } from '../utils/point.js';
 
 function createEventTypeListTemplate(id, allTypes) {
   let typeListTemplate = '';
@@ -195,7 +195,7 @@ export default class EditPointView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#point);
   };
 
 }

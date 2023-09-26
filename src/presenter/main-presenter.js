@@ -15,14 +15,11 @@ export default class MainPresenter {
   #siteTripControlsElement = document.querySelector('.trip-controls__filters');
   #sortView = null;
   #listEmptyView = null;
-  #pointComponent = null;
-  #editComponent = null;
 
   #pointsListComponent = new PointsListView();
 
   #points = [];
-  #pointsComponents = new Map();
-  #editComponents = new Map();
+  #pointPresenters = new Map();
 
   constructor({ pointsContainer, pointsModel, offersModel, destinationsModel }) {
     this.#pointsContainer = pointsContainer;
@@ -60,20 +57,25 @@ export default class MainPresenter {
       for (const point of this.#points) {
         const pointPresenter = new PointPresenter({
           pointContainer: this.#pointsListComponent,
-          point,
           offersModel: this.#offersModel,
           destinationsModel: this.#destinationsModel,
-          returnPointComponent: (pointComponent, editComponent) => {
-            this.#pointComponent = pointComponent;
-            this.#editComponent = editComponent;
-          },
+          onDataChange: this.#handlePointChange,
+          onModeChange: this.#handleModeChange,
         });
-        pointPresenter.init();
-        this.#pointsComponents.set(point.id, this.#pointComponent);
-        this.#editComponents.set(point.id, this.#editComponent);
+        pointPresenter.init(point);
+        this.#pointPresenters.set(point.id, pointPresenter);
       }
     }
   }
+
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handlePointChange = (updatedPoint) => {
+    this.#pointsModel.updatePoints(updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  };
 
   #clear() {
     if (this.#listEmptyView) {
@@ -82,14 +84,9 @@ export default class MainPresenter {
     if (this.#sortView) {
       remove(this.#sortView);
     }
-    if (this.#pointsComponents.size !== 0) {
-      for (const pointComponent of this.#pointsComponents.values()) {
-        remove(pointComponent);
-      }
-    }
-    if (this.#editComponents.size !== 0) {
-      for (const editComponent of this.#editComponents.values()) {
-        remove(editComponent);
+    if (this.#pointPresenters.size !== 0) {
+      for (const pointPresenter of this.#pointPresenters.values()) {
+        pointPresenter.destroy();
       }
     }
   }
