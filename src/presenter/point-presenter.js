@@ -14,11 +14,6 @@ export default class PointPresenter {
   #point = null;
   #offersModel = null;
   #destinationsModel = null;
-  #offers = [];
-  #typeOffers = [];
-  #allTypes = [];
-  #destination = [];
-  #allCities = [];
   #pointComponent = null;
   #editComponent = null;
   #mode = Mode.DEFAULT;
@@ -33,35 +28,26 @@ export default class PointPresenter {
 
   init(point) {
     this.#point = point;
-    this.#offers = this.#offersModel.getOffersById(this.#point.offers);
-    this.#typeOffers = this.#offersModel.getOffersByType(this.#point.type);
-    this.#allTypes = this.#offersModel.allTypes;
-    this.#destination = this.#destinationsModel.getDestination(this.#point.destination);
-    this.#allCities = this.#destinationsModel.allCities;
-
-    this.#renderPoint(this.#point, this.#destination, this.#offers, this.#typeOffers, this.#allTypes, this.#allCities);
+    this.#renderPoint(this.#point, this.#destinationsModel, this.#offersModel);
   }
 
-  #renderPoint(point, destination, offers, typeOffers, allTypes, allCities) {
+  #renderPoint(point, destinationsModel, offersModel) {
 
     const prevPointComponent = this.#pointComponent;
     const prevEditComponent = this.#editComponent;
 
     this.#pointComponent = new PointView({
       point,
-      destination,
-      offers,
+      destinationsModel,
+      offersModel,
       onArrowDownClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#editComponent = new EditPointView({
       point,
-      destination,
-      offers,
-      typeOffers,
-      allTypes,
-      allCities,
+      destinationsModel,
+      offersModel,
       onArrowUpClick: this.#handleCloseClick,
       onFormSubmit: this.#handleFormSubmit,
     });
@@ -71,12 +57,10 @@ export default class PointPresenter {
       return;
     }
 
-    //if (this.#pointContainer.element.contains(prevPointComponent.element)) {
     if (this.#mode === Mode.DEFAULT) {
       replace(this.#pointComponent, prevPointComponent);
     }
 
-    //if (this.#pointContainer.element.contains(prevEditComponent.element)) {
     if (this.#mode === Mode.EDITING) {
       replace(this.#editComponent, prevEditComponent);
     }
@@ -114,6 +98,7 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#editComponent.reset(this.#point);
       this.#replaceEditToPoint();
     }
   };
@@ -124,6 +109,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#editComponent.reset(this.#point);
       this.#replaceEditToPoint();
     }
   }

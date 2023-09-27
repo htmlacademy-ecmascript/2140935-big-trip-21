@@ -3,8 +3,12 @@ import { destinations } from '../mocks/destinations.js';
 export default class DestinationsModel {
   #destinations = destinations;
 
-  getDestination(id) {
+  getDestinationById(id) {
     return this.#destinations.find((destination) => destination.id === id);
+  }
+
+  getDestinationByName(name) {
+    return this.#destinations.find((destination) => destination.name === name);
   }
 
   get allCities() {
