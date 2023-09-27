@@ -54,6 +54,6 @@ export function generateRandomDate() {
   return { startDate, endDate };
 }
 
-export function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+export function capitalizeFirstLetter(str) {
+  return str.replace(/^\w/, (match) => match.toUpperCase());
 }
