@@ -1,5 +1,7 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { formattedDate } from '../utils/point.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
+import { POINT_DEFAULT } from '../const.js';
 
 function createEventTypeListTemplate(id, allTypes) {
   let typeListTemplate = '';
@@ -80,7 +82,7 @@ function createDestinationTemplate(destination) {
         <p class="event__destination-description">${destination.description}</p>
         <div class="event__photos-container">
           <div class="event__photos-tape">
-            ${imageTemplate}
+          ${imageTemplate}
           </div>
         </div>
       </section>`
@@ -88,15 +90,15 @@ function createDestinationTemplate(destination) {
   }
 }
 
-function createEditPointTemplate(point, destination, offers, typeOffers, allTypes, allCities) {
-  const { id, basePrice, dateFrom, dateTo, type } = point;
+function createEditPointTemplate(data) {
+  const { id, basePrice, dateFrom, dateTo, type, destinationData, offersData, typeOffers, allTypes, allCities } = data;
   const timeStart = formattedDate(dateFrom, 'DD/MM/YY HH:mm');
   const timeEnd = formattedDate(dateTo, 'DD/MM/YY HH:mm');
   const typeImage = type.toLowerCase();
   const eventTypeListTemplate = createEventTypeListTemplate(id, allTypes);
   const citiesListTemplate = createCitiesListTemplate(allCities);
-  const offersTemplate = createOffersTemplate(id, offers, typeOffers);
-  const destinationTemplate = createDestinationTemplate(destination);
+  const offersTemplate = createOffersTemplate(id, offersData, typeOffers);
+  const destinationTemplate = createDestinationTemplate(destinationData);
   return (
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -120,7 +122,7 @@ function createEditPointTemplate(point, destination, offers, typeOffers, allType
             <label class="event__label  event__type-output" for="event-destination-${id}">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
+            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destinationData.name}" list="destination-list-${id}">
             <datalist id="destination-list-${id}">
               ${citiesListTemplate}
             </datalist>
@@ -157,36 +159,55 @@ function createEditPointTemplate(point, destination, offers, typeOffers, allType
   );
 }
 
-export default class EditPointView extends AbstractView {
-  #point = null;
-  #destination = null;
-  #offers = null;
-  #typeOffers = null;
-  #allTypes = null;
-  #allCities = null;
+export default class EditPointView extends AbstractStatefulView {
   #handleCloseClick = null;
   #handleFormSubmit = null;
+  #destinationsModel = null;
 
-  constructor({ point, destination, offers, typeOffers, allTypes, allCities, onArrowUpClick, onFormSubmit}) {
+  constructor({ point, destinationsModel, offersModel, onArrowUpClick, onFormSubmit}) {
     super();
-    this.#point = point;
-    this.#destination = destination;
-    this.#offers = offers;
-    this.#typeOffers = typeOffers;
-    this.#allTypes = allTypes;
-    this.#allCities = allCities;
+    this._setState(EditPointView.parsePointToState(point, destinationsModel, offersModel));
+    this.#destinationsModel = destinationsModel;
     this.#handleCloseClick = onArrowUpClick;
     this.#handleFormSubmit = onFormSubmit;
 
+    this._restoreHandlers();
+  }
+
+  get template() {
+    return createEditPointTemplate(this._state);
+  }
+
+  reset(task) {
+    this.updateElement(
+      EditPointView.parseTaskToState(task),
+    );
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('.event__rollup-btn')
       .addEventListener('click', this.#closeClickHandler);
     this.element.querySelector('form')
       .addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__input--price')
+      .addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelectorAll('.event__type-input')
+      .forEach((input) => input.addEventListener('change', this.#pointTypeHandler));
+    this.element.querySelector('.event__input--destination')
+      .addEventListener('change', this.#destinationHandler);
   }
 
-  get template() {
-    return createEditPointTemplate(this.#point, this.#destination, this.#offers, this.#typeOffers, this.#allTypes, this.#allCities);
-  }
+  #pointTypeHandler = (evt) => {
+    this._state.type = capitalizeFirstLetter(evt.target.value);
+  };
+
+  #destinationHandler = (evt) => {
+    this._state.destinationData.name = evt.target.value;
+  };
+
+  #priceChangeHandler = (evt) => {
+    this._state.basePrice = evt.target.value;
+  };
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();
@@ -195,7 +216,30 @@ export default class EditPointView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit(EditPointView.parseStateToPoint(this._state, this.#destinationsModel));
   };
 
+  static parsePointToState(point = POINT_DEFAULT, destinationsModel, offersModel) {
+    return {...point,
+      offersData: offersModel.getOffersById(point.offers),
+      typeOffers: offersModel.getOffersByType(point.type),
+      allTypes: offersModel.allTypes,
+      destinationData: destinationsModel.getDestinationById(point.destination),
+      allCities: destinationsModel.allCities,
+    };
+  }
+
+  static parseStateToPoint(state, destinationsModel) {
+    const point = {...state};
+    point.destination = destinationsModel.getDestinationByName(point.destinationData.name).id;
+    point.offers = point.offersData.map((offer) => offer.id);
+
+    delete point.offersData;
+    delete point.typeOffers;
+    delete point.allTypes;
+    delete point.destinationData;
+    delete point.allCities;
+
+    return point;
+  }
 }
