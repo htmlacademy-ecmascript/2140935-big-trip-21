@@ -216,13 +216,13 @@ export default class EditPointView extends AbstractStatefulView {
 
   #pointOffersHandler = (evt) => {
     const title = evt.target.name;
-    const offerIndex = this._state.offers.findIndex((item) => item.title === title);
+    const offerIndex = this._state.offersData.findIndex((item) => item.title === title);
     if (offerIndex > -1) {
-      this._state.offers.splice(offerIndex, 1);
+      this._state.offersData.splice(offerIndex, 1);
     } else {
       const offer = this._state.typeOffers.find((item) => item.title === title);
       if (offer) {
-        this._state.offers.push({...offer});
+        this._state.offersData.push({...offer});
       }
     }
   };
@@ -233,6 +233,7 @@ export default class EditPointView extends AbstractStatefulView {
       type: this._state.type,
       typeOffers: this.#offersModel.getOffersByType(this._state.type),
     });
+    this._state.offersData = [];
   };
 
   #destinationHandler = (evt) => {
