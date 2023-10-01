@@ -12,6 +12,10 @@ export function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
+export function isDatesEqual(dateA, dateB) {
+  return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+}
+
 export function sortDay(pointA, pointB) {
   return dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 }
@@ -45,9 +49,9 @@ export function formatTimeInterval(intervalMinutes) {
 
   if (days > 0) {
     return `${days.toString()}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
-  } else if (hours > 0) {
-    return `${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
-  } else {
-    return `${minutes.toString()}M`;
   }
+  if (hours > 0) {
+    return `${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
+  }
+  return `${minutes.toString()}M`;
 }
