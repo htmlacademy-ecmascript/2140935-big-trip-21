@@ -4,7 +4,7 @@ import SortView from '../view/sort-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import FilterPresenter from './filter-presenter.js';
-import { FilterType, SortType, UpdateType, UserAction} from '../const.js';
+import { SortType, UpdateType, UserAction} from '../const.js';
 import { sortDay, sortTime, sortPrice } from '../utils/point.js';
 import { filter } from '../utils/filter.js';
 
@@ -14,10 +14,9 @@ export default class MainPresenter {
   #offersModel = null;
   #filterModel = null;
   #destinationsModel = null;
-  #filterType = FilterType.EVERYTHING;
   #siteTripControlsElement = document.querySelector('.trip-controls__filters');
   #sortView = null;
-  #listEmptyView = null;
+  #listEmptyComponent = null;
   #pointsListComponent = new PointsListView();
   #points = [];
   #pointPresenters = new Map();
@@ -38,7 +37,6 @@ export default class MainPresenter {
     const filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
     const filteredPoints = filter[filterType](points);
-
     switch (this.#currentSortType) {
       case SortType.DAY:
         return filteredPoints.sort(sortDay);
@@ -51,7 +49,6 @@ export default class MainPresenter {
   }
 
   init() {
-    this.#points = this.#pointsModel.filteredPoints(this.#filterType);
     this.#renderFilter();
     this.#renderPoints();
   }
@@ -67,8 +64,8 @@ export default class MainPresenter {
 
   #renderPoints() {
     if (this.#points.length === 0) {
-      this.#listEmptyView = new ListEmptyView({filterType: this.#filterType});
-      render(this.#listEmptyView, this.#pointsContainer);
+      this.#listEmptyComponent = new ListEmptyView({filterType: this.#filterModel.filter});
+      render(this.#listEmptyComponent, this.#pointsContainer);
     } else {
       this.#renderSort();
       render(this.#pointsListComponent, this.#pointsContainer);
@@ -115,7 +112,7 @@ export default class MainPresenter {
         this.#pointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        this.#clearPoints();
+        this.#clearPoints({resetSortType: false});
         this.#renderPoints();
         break;
       case UpdateType.MAJOR:
@@ -144,8 +141,8 @@ export default class MainPresenter {
   }
 
   #clearPoints({resetSortType = false} = {}) {
-    if (this.#listEmptyView) {
-      remove(this.#listEmptyView);
+    if (this.#listEmptyComponent) {
+      remove(this.#listEmptyComponent);
     }
     if (this.#sortView) {
       remove(this.#sortView);

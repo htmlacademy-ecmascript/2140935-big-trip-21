@@ -1,17 +1,13 @@
 import Observable from '../framework/observable.js';
 import { getRandomPoint } from '../mocks/points.js';
 import { POINTS_COUNT } from '../const.js';
-import { filter, updateItem } from '../utils/point.js';
+import { updateItem } from '../utils/point.js';
 
 export default class PointsModel extends Observable {
   #points = Array.from({length: POINTS_COUNT}, getRandomPoint);
 
   get points() {
     return this.#points;
-  }
-
-  getFilteredPoints(filterType) {
-    return filter[filterType](this.#points);
   }
 
   updatePoints(updatedPoint) {
@@ -22,7 +18,7 @@ export default class PointsModel extends Observable {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+      throw new Error('Can\'t update unexisting point');
     }
 
     this.#points = [
@@ -47,7 +43,7 @@ export default class PointsModel extends Observable {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t delete unexisting task');
+      throw new Error('Can\'t delete unexisting point');
     }
 
     this.#points = [

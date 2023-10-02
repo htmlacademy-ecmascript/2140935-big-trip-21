@@ -16,8 +16,8 @@ const mainPresenter = new MainPresenter({
   pointsContainer: siteMainElement,
   pointsModel,
   offersModel,
+  destinationsModel,
   filterModel,
-  destinationsModel
 });
 
 render(new TripInfoView(), siteTripInfoElement, 'AFTERBEGIN');
