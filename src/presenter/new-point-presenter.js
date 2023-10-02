@@ -29,10 +29,9 @@ export default class NewPointPresenter {
       offersModel: this.#offersModel,
       onArrowUpClick: this.#handleDeleteClick,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
     });
-
-    render(this.#editPointComponent, this.#pointContainer, RenderPosition.AFTERBEGIN);
+    render(this.#editPointComponent, this.#pointContainer.element, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }

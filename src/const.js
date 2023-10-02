@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 
-export const POINTS_COUNT = 10;
+export const POINTS_COUNT = 5;
 
 export const DAY_FORMAT = 'MMM DD';
 
