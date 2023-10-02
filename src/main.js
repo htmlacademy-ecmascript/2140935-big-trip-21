@@ -1,5 +1,6 @@
 import { render } from './framework/render.js';
 import TripInfoView from './view/trip-info-view.js';
+import NewPointButtonView from './view/new-point-button-view.js';
 import MainPresenter from './presenter/main-presenter.js';
 import PointsModel from './model/points-model.js';
 import OffersModel from './model/offers-model.js';
@@ -18,8 +19,23 @@ const mainPresenter = new MainPresenter({
   offersModel,
   destinationsModel,
   filterModel,
+  onNewPointDestroy: handleNewPointFormClose,
 });
 
+const newPointButtonComponent = new NewPointButtonView({
+  onClick: handleNewPointButtonClick
+});
+
+function handleNewPointButtonClick() {
+  mainPresenter.createPoint();
+  newPointButtonComponent.element.disabled = true;
+}
+
+function handleNewPointFormClose() {
+  newPointButtonComponent.element.disabled = false;
+}
+
 render(new TripInfoView(), siteTripInfoElement, 'AFTERBEGIN');
+render(newPointButtonComponent, siteTripInfoElement);
 
 mainPresenter.init();
