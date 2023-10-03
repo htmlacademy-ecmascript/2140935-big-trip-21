@@ -47,10 +47,6 @@ export default class SortView extends AbstractView {
     return createSortTemplate(this.#currentSortType);
   }
 
-  /*#sortTypeChangeHandler = (evt) => {
-    this.#handleSortTypeChange(evt.target.dataset.sortType);
-  };*/
-
   #sortTypeChangeHandler = (evt) => {
     this.#handleSortTypeChange(evt.target.getAttribute('data-sort-type'));
   };

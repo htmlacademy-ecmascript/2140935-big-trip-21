@@ -143,7 +143,7 @@ function createEditPointTemplate(data) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-${id}" type="number" name="event-price" value="${basePrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -164,17 +164,19 @@ function createEditPointTemplate(data) {
 export default class EditPointView extends AbstractStatefulView {
   #handleCloseClick = null;
   #handleFormSubmit = null;
+  #handleDeleteClick = null;
   #destinationsModel = null;
   #offersModel = null;
   #datepicker = null;
 
-  constructor({ point, destinationsModel, offersModel, onArrowUpClick, onFormSubmit}) {
+  constructor({ point, destinationsModel, offersModel, onArrowUpClick, onFormSubmit, onDeleteClick}) {
     super();
     this._setState(EditPointView.parsePointToState(point, destinationsModel, offersModel));
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#handleCloseClick = onArrowUpClick;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -211,18 +213,20 @@ export default class EditPointView extends AbstractStatefulView {
       .addEventListener('change', this.#priceChangeHandler);
     this.element.querySelectorAll('.event__offer-checkbox')
       .forEach((input) => input.addEventListener('change', this.#pointOffersHandler));
+    this.element.querySelector('.event__reset-btn')
+      .addEventListener('click', this.#formDeleteClickHandler);
     this.#setDatepicker();
   }
 
   #pointOffersHandler = (evt) => {
     const title = evt.target.name;
-    const offerIndex = this._state.offers.findIndex((item) => item.title === title);
+    const offerIndex = this._state.offersData.findIndex((item) => item.title === title);
     if (offerIndex > -1) {
-      this._state.offers.splice(offerIndex, 1);
+      this._state.offersData.splice(offerIndex, 1);
     } else {
       const offer = this._state.typeOffers.find((item) => item.title === title);
       if (offer) {
-        this._state.offers.push({...offer});
+        this._state.offersData.push({...offer});
       }
     }
   };
@@ -233,6 +237,7 @@ export default class EditPointView extends AbstractStatefulView {
       type: this._state.type,
       typeOffers: this.#offersModel.getOffersByType(this._state.type),
     });
+    this._state.offersData = [];
   };
 
   #destinationHandler = (evt) => {
@@ -254,6 +259,11 @@ export default class EditPointView extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(EditPointView.parseStateToPoint(this._state, this.#destinationsModel));
+  };
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EditPointView.parseStateToPoint(this._state, this.#destinationsModel));
   };
 
   #dateFromChangeHandler = ([userDate]) => {
