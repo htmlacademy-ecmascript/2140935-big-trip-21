@@ -31,6 +31,10 @@ function render(component, container, place = RenderPosition.BEFOREEND) {
     throw new Error('Can render only components');
   }
 
+  if (container instanceof AbstractView) {
+    container = container.element;
+  }
+
   if (container === null) {
     throw new Error('Container element doesn\'t exist');
   }
