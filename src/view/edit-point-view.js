@@ -91,8 +91,8 @@ function createDestinationTemplate(destination) {
   }
 }
 
-function createEditPointTemplate(data, editMode, isDisabled) {
-  const { id, basePrice, dateFrom, dateTo, type, destinationData, offersData, typeOffers, allTypes, allCities } = data;
+function createEditPointTemplate(data, editMode) {
+  const { id, basePrice, dateFrom, dateTo, type, destinationData, offersData, typeOffers, allTypes, allCities, isSaving, isDeleting } = data;
   const timeStart = formattedDate(dateFrom, 'DD/MM/YY HH:mm');
   const timeEnd = formattedDate(dateTo, 'DD/MM/YY HH:mm');
   const typeImage = type.toLowerCase();
@@ -102,7 +102,7 @@ function createEditPointTemplate(data, editMode, isDisabled) {
   const destinationTemplate = createDestinationTemplate(destinationData);
   return (
     `<li class="trip-events__item">
-      <form class="event event--edit" action="#" method="post" ${isDisabled ? 'disabled' : ''}>
+      <form class="event event--edit" action="#" method="post" ${isSaving ? 'disabled' : ''}>
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
@@ -145,8 +145,8 @@ function createEditPointTemplate(data, editMode, isDisabled) {
             <input class="event__input  event__input--price" id="event-price-${id}" type="number" name="event-price" value="${basePrice}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">${editMode}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting' : editMode}</button>
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
           </button>
