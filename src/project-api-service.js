@@ -49,7 +49,7 @@ export default class ProjectApiService extends ApiService {
     return parsedResponse;
   }
 
-  async deleteTask(point) {
+  async deletePoint(point) {
     const response = await this._load({
       url: `points/${point.id}`,
       method: Method.DELETE,
@@ -70,6 +70,8 @@ export default class ProjectApiService extends ApiService {
     delete adaptedPoint.dateFrom;
     delete adaptedPoint.dateTo;
     delete adaptedPoint.isFavorite;
+
+    console.log(adaptedPoint);
 
     return adaptedPoint;
   }

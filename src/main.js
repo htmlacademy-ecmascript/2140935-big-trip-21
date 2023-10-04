@@ -5,7 +5,7 @@ import PointsModel from './model/points-model.js';
 import OffersModel from './model/offers-model.js';
 import FilterModel from './model/filter-model.js';
 import DestinationsModel from './model/destinations-model.js';
-import projectApiService from './project-api-service.js';
+import ProjectApiService from './project-api-service.js';
 import { nanoid } from 'nanoid';
 
 const siteTripInfoElement = document.querySelector('.trip-main');
@@ -14,13 +14,13 @@ const END_POINT = 'https://21.objects.pages.academy/big-trip';
 
 const siteMainElement = document.querySelector('.trip-events');
 const pointsModel = new PointsModel({
-  projectApiService: new projectApiService(END_POINT, AUTHORIZATION)
+  projectApiService: new ProjectApiService(END_POINT, AUTHORIZATION)
 });
 const offersModel = new OffersModel({
-  projectApiService: new projectApiService(END_POINT, AUTHORIZATION)
+  projectApiService: new ProjectApiService(END_POINT, AUTHORIZATION)
 });
 const destinationsModel = new DestinationsModel({
-  projectApiService: new projectApiService(END_POINT, AUTHORIZATION)
+  projectApiService: new ProjectApiService(END_POINT, AUTHORIZATION)
 });
 const filterModel = new FilterModel();
 const mainPresenter = new MainPresenter({
