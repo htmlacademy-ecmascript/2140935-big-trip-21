@@ -4,10 +4,10 @@ export default class OffersModel {
 
   constructor({projectApiService}) {
     this.#projectApiService = projectApiService;
+  }
 
-    this.#projectApiService.offers.then((offers) => {
-      console.log(offers);
-    });
+  get offers() {
+    return this.#offers;
   }
 
   getOffersById(ids) {

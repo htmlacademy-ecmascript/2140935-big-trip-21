@@ -4,11 +4,6 @@ export default class DestinationsModel {
 
   constructor({projectApiService}) {
     this.#projectApiService = projectApiService;
-
-    this.#projectApiService.destinations
-      .then((destinations) => {
-        console.log(destinations);
-      });
   }
 
   getDestinationById(id) {

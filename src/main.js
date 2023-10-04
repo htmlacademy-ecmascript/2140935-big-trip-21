@@ -1,5 +1,4 @@
 import { render } from './framework/render.js';
-import TripInfoView from './view/trip-info-view.js';
 import NewPointButtonView from './view/new-point-button-view.js';
 import MainPresenter from './presenter/main-presenter.js';
 import PointsModel from './model/points-model.js';
@@ -9,10 +8,10 @@ import DestinationsModel from './model/destinations-model.js';
 import projectApiService from './project-api-service.js';
 import { nanoid } from 'nanoid';
 
+const siteTripInfoElement = document.querySelector('.trip-main');
 const AUTHORIZATION = `Basic ${nanoid()}`;
 const END_POINT = 'https://21.objects.pages.academy/big-trip';
 
-const siteTripInfoElement = document.querySelector('.trip-main');
 const siteMainElement = document.querySelector('.trip-events');
 const pointsModel = new PointsModel({
   projectApiService: new projectApiService(END_POINT, AUTHORIZATION)
@@ -45,8 +44,6 @@ function handleNewPointButtonClick() {
 function handleNewPointFormClose() {
   newPointButtonComponent.element.disabled = false;
 }
-
-render(new TripInfoView(), siteTripInfoElement, 'AFTERBEGIN');
 
 async function init() {
   mainPresenter.init();

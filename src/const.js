@@ -11,7 +11,7 @@ export const POINT_DEFAULT = {
   basePrice: 0,
   dateFrom: dayjs().toISOString(),
   dateTo: dayjs().toISOString(),
-  destination: 3,
+  destination: '7ecc5033-41eb-417e-9bc0-e1bf56d4de4f',
   isFavorite: false,
   offers: [],
   type: 'Flight'
@@ -46,4 +46,9 @@ export const UpdateType = {
 export const EditMode = {
   EDIT: 'Delete',
   NEW: 'Cancel',
+};
+
+export const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
 };

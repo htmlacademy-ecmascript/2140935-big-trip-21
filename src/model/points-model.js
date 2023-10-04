@@ -1,5 +1,5 @@
 import Observable from '../framework/observable.js';
-import { updateItem } from '../utils/point.js';
+import { findTripDates, extractTripRoute, calculateTripBaseCost, getEmptyFilters } from '../utils/utils.js';
 import { UpdateType } from '../const.js';
 
 export default class PointsModel extends Observable {
@@ -9,11 +9,6 @@ export default class PointsModel extends Observable {
   constructor({projectApiService}) {
     super();
     this.#projectApiService = projectApiService;
-
-    this.#projectApiService.points
-      .then((points) => {
-        console.log(points.map(this.#adaptToClient));
-      });
   }
 
   get points() {
@@ -28,10 +23,6 @@ export default class PointsModel extends Observable {
       this.#points = [];
     }
     this._notify(UpdateType.INIT);
-  }
-
-  updatePoints(updatedPoint) {
-    this.#points = updateItem(this.#points, updatedPoint);
   }
 
   async updatePoint(updateType, update) {
@@ -56,16 +47,18 @@ export default class PointsModel extends Observable {
     }
   }
 
-  addPoint(updateType, update) {
-    this.#points = [
-      update,
-      ...this.#points,
-    ];
-
-    this._notify(updateType, update);
+  async addPoint(updateType, update) {
+    try {
+      const response = await this.#projectApiService.addPoint(update);
+      const newPoint = this.#adaptToClient(response);
+      this.#points = [newPoint, ...this.#points];
+      this._notify(updateType, newPoint);
+    } catch(err) {
+      throw new Error('Can\'t add point');
+    }
   }
 
-  deletePoint(updateType, update) {
+  async deletePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
@@ -77,7 +70,16 @@ export default class PointsModel extends Observable {
       ...this.#points.slice(index + 1),
     ];
 
-    this._notify(updateType);
+    try {
+      await this.#projectApiService.deletePoint(update);
+      this.#points = [
+        ...this.#points.slice(0, index),
+        ...this.#points.slice(index + 1),
+      ];
+      this._notify(updateType);
+    } catch(err) {
+      throw new Error('Can\'t delete point');
+    }
   }
 
   #adaptToClient(point) {
@@ -94,5 +96,28 @@ export default class PointsModel extends Observable {
     delete adaptedPoint['is_favorite'];
 
     return adaptedPoint;
+  }
+
+  get tripDates() {
+    return findTripDates(this.#points);
+  }
+
+  get tripRoute() {
+    if (this.#points.length === 3) {
+      return this.#points.slice(0, 3).map((point) => point.destination);
+    }
+    return extractTripRoute(this.#points);
+  }
+
+  get tripBaseCost() {
+    return calculateTripBaseCost(this.#points);
+  }
+
+  get allActiveOffersId() {
+    return this.#points.flatMap((point) => point.offers);
+  }
+
+  get filterDisabled() {
+    return getEmptyFilters(this.#points);
   }
 }

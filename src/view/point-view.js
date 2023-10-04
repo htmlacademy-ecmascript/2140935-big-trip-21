@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { formattedDate, getTimeInterval, formatTimeInterval } from '../utils/point.js';
+import { formattedDate, getTimeInterval, formatTimeInterval } from '../utils/utils.js';
 import { DAY_FORMAT, TIME_FORMAT } from '../const.js';
 
 function createOffersTemplate(offers) {

@@ -1,6 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { formattedDate } from '../utils/point.js';
-import { capitalizeFirstLetter } from '../utils/common.js';
+import { formattedDate, capitalizeFirstLetter } from '../utils/utils.js';
 import { POINT_DEFAULT, EditMode } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -92,7 +91,7 @@ function createDestinationTemplate(destination) {
   }
 }
 
-function createEditPointTemplate(data, editMode) {
+function createEditPointTemplate(data, editMode, isDisabled) {
   const { id, basePrice, dateFrom, dateTo, type, destinationData, offersData, typeOffers, allTypes, allCities } = data;
   const timeStart = formattedDate(dateFrom, 'DD/MM/YY HH:mm');
   const timeEnd = formattedDate(dateTo, 'DD/MM/YY HH:mm');
@@ -103,7 +102,7 @@ function createEditPointTemplate(data, editMode) {
   const destinationTemplate = createDestinationTemplate(destinationData);
   return (
     `<li class="trip-events__item">
-      <form class="event event--edit" action="#" method="post">
+      <form class="event event--edit" action="#" method="post" ${isDisabled ? 'disabled' : ''}>
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
@@ -309,6 +308,9 @@ export default class EditPointView extends AbstractStatefulView {
       allTypes: offersModel.allTypes,
       destinationData: destinationsModel.getDestinationById(point.destination),
       allCities: destinationsModel.allCities,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
     };
   }
 
@@ -322,6 +324,9 @@ export default class EditPointView extends AbstractStatefulView {
     delete point.allTypes;
     delete point.destinationData;
     delete point.allCities;
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
 
     return point;
   }
