@@ -7,14 +7,14 @@ export const DAY_FORMAT = 'MMM DD';
 export const TIME_FORMAT = 'HH:mm';
 
 export const POINT_DEFAULT = {
-  id: '',
+  id: null,
   basePrice: 0,
   dateFrom: dayjs().toISOString(),
   dateTo: dayjs().toISOString(),
-  destination: '7ecc5033-41eb-417e-9bc0-e1bf56d4de4f',
+  destination: null,//'7ecc5033-41eb-417e-9bc0-e1bf56d4de4f',
   isFavorite: false,
   offers: [],
-  type: 'Flight'
+  type: 'flight',
 };
 
 export const FilterType = {

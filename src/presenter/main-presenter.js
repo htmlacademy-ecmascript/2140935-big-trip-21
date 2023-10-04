@@ -70,6 +70,7 @@ export default class MainPresenter {
   get points() {
     const filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
+    console.log(points);
     const filteredPoints = filter[filterType](points);
     switch (this.#currentSortType) {
       case SortType.DAY:

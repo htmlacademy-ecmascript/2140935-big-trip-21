@@ -9,8 +9,8 @@ function createEventTypeListTemplate(id, allTypes) {
   for (const type of allTypes) {
     typeListTemplate += `
     <div class="event__type-item">
-      <input id="event-type-${type.toLowerCase()}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
-      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-${id}">${type}</label>
+      <input id="event-type-${type.toLowerCase()}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-${id}">${capitalizeFirstLetter(type)}</label>
     </div>`;
   }
   return typeListTemplate;
@@ -72,7 +72,7 @@ function createImageTemplate(pictures) {
 }
 
 function createDestinationTemplate(destination) {
-  if (!destination.description) {
+  if (!destination || !destination.description) {
     return '';
   } else {
     const imageTemplate = createImageTemplate(destination.pictures);
@@ -123,7 +123,7 @@ function createEditPointTemplate(data, editMode, isDisabled) {
             <label class="event__label  event__type-output" for="event-destination-${id}">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destinationData.name}" list="destination-list-${id}">
+            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destinationData && destinationData.name ? destinationData.name : ''}" list="destination-list-${id}" required>
             <datalist id="destination-list-${id}">
               ${citiesListTemplate}
             </datalist>
@@ -233,7 +233,7 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #pointTypeHandler = (evt) => {
-    this._state.type = capitalizeFirstLetter(evt.target.value);
+    this._state.type = evt.target.value.toLowerCase();
     this.updateElement({
       type: this._state.type,
       typeOffers: this.#offersModel.getOffersByType(this._state.type),
