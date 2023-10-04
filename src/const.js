@@ -1,20 +1,20 @@
-import { nanoid } from 'nanoid';
+import dayjs from 'dayjs';
 
-export const POINTS_COUNT = 5;
+export const POINTS_COUNT = 2;
 
 export const DAY_FORMAT = 'MMM DD';
 
 export const TIME_FORMAT = 'HH:mm';
 
 export const POINT_DEFAULT = {
-  id: nanoid(),
+  id: null,
   basePrice: 0,
-  dateFrom: '2023-01-01T00:00:00.000Z',
-  dateTo: '2023-01-01T00:00:00.000Z',
-  destination: 3,
+  dateFrom: dayjs().toISOString(),
+  dateTo: dayjs().toISOString(),
+  destination: null,//'7ecc5033-41eb-417e-9bc0-e1bf56d4de4f',
   isFavorite: false,
   offers: [],
-  type: 'Flight'
+  type: 'flight',
 };
 
 export const FilterType = {
@@ -40,4 +40,15 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
+};
+
+export const EditMode = {
+  EDIT: 'Delete',
+  NEW: 'Cancel',
+};
+
+export const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
 };

@@ -1,7 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { formattedDate } from '../utils/point.js';
-import { capitalizeFirstLetter } from '../utils/common.js';
-import { POINT_DEFAULT } from '../const.js';
+import { formattedDate, capitalizeFirstLetter } from '../utils/utils.js';
+import { POINT_DEFAULT, EditMode } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -10,8 +9,8 @@ function createEventTypeListTemplate(id, allTypes) {
   for (const type of allTypes) {
     typeListTemplate += `
     <div class="event__type-item">
-      <input id="event-type-${type.toLowerCase()}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
-      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-${id}">${type}</label>
+      <input id="event-type-${type.toLowerCase()}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+      <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-${id}">${capitalizeFirstLetter(type)}</label>
     </div>`;
   }
   return typeListTemplate;
@@ -73,7 +72,7 @@ function createImageTemplate(pictures) {
 }
 
 function createDestinationTemplate(destination) {
-  if (!destination.description) {
+  if (!destination || !destination.description) {
     return '';
   } else {
     const imageTemplate = createImageTemplate(destination.pictures);
@@ -92,8 +91,8 @@ function createDestinationTemplate(destination) {
   }
 }
 
-function createEditPointTemplate(data) {
-  const { id, basePrice, dateFrom, dateTo, type, destinationData, offersData, typeOffers, allTypes, allCities } = data;
+function createEditPointTemplate(data, editMode) {
+  const { id, basePrice, dateFrom, dateTo, type, destinationData, offersData, typeOffers, allTypes, allCities, isSaving, isDeleting } = data;
   const timeStart = formattedDate(dateFrom, 'DD/MM/YY HH:mm');
   const timeEnd = formattedDate(dateTo, 'DD/MM/YY HH:mm');
   const typeImage = type.toLowerCase();
@@ -103,7 +102,7 @@ function createEditPointTemplate(data) {
   const destinationTemplate = createDestinationTemplate(destinationData);
   return (
     `<li class="trip-events__item">
-      <form class="event event--edit" action="#" method="post">
+      <form class="event event--edit" action="#" method="post" ${isSaving ? 'disabled' : ''}>
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
@@ -124,7 +123,7 @@ function createEditPointTemplate(data) {
             <label class="event__label  event__type-output" for="event-destination-${id}">
               ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destinationData.name}" list="destination-list-${id}">
+            <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destinationData && destinationData.name ? destinationData.name : ''}" list="destination-list-${id}" required>
             <datalist id="destination-list-${id}">
               ${citiesListTemplate}
             </datalist>
@@ -146,8 +145,8 @@ function createEditPointTemplate(data) {
             <input class="event__input  event__input--price" id="event-price-${id}" type="number" name="event-price" value="${basePrice}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting' : editMode}</button>
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
           </button>
@@ -168,8 +167,9 @@ export default class EditPointView extends AbstractStatefulView {
   #destinationsModel = null;
   #offersModel = null;
   #datepicker = null;
+  #editMode = EditMode.EDIT;
 
-  constructor({ point, destinationsModel, offersModel, onArrowUpClick, onFormSubmit, onDeleteClick}) {
+  constructor({ point, destinationsModel, offersModel, onArrowUpClick, onFormSubmit, onDeleteClick, editMode }) {
     super();
     this._setState(EditPointView.parsePointToState(point, destinationsModel, offersModel));
     this.#destinationsModel = destinationsModel;
@@ -177,12 +177,13 @@ export default class EditPointView extends AbstractStatefulView {
     this.#handleCloseClick = onArrowUpClick;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
+    this.#editMode = editMode;
 
     this._restoreHandlers();
   }
 
   get template() {
-    return createEditPointTemplate(this._state);
+    return createEditPointTemplate(this._state, this.#editMode);
   }
 
   removeElement() {
@@ -232,7 +233,7 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #pointTypeHandler = (evt) => {
-    this._state.type = capitalizeFirstLetter(evt.target.value);
+    this._state.type = evt.target.value.toLowerCase();
     this.updateElement({
       type: this._state.type,
       typeOffers: this.#offersModel.getOffersByType(this._state.type),
@@ -248,7 +249,7 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #priceChangeHandler = (evt) => {
-    this._state.basePrice = evt.target.value;
+    this._state.basePrice = parseInt(evt.target.value, 10);
   };
 
   #closeClickHandler = (evt) => {
@@ -307,6 +308,9 @@ export default class EditPointView extends AbstractStatefulView {
       allTypes: offersModel.allTypes,
       destinationData: destinationsModel.getDestinationById(point.destination),
       allCities: destinationsModel.allCities,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
     };
   }
 
@@ -320,6 +324,12 @@ export default class EditPointView extends AbstractStatefulView {
     delete point.allTypes;
     delete point.destinationData;
     delete point.allCities;
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+    if (!point.id) {
+      delete point.id;
+    }
 
     return point;
   }

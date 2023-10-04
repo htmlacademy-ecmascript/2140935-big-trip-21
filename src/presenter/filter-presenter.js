@@ -17,11 +17,16 @@ export default class FilterPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
+  get filterDisabled() {
+    return this.#pointsModel.filterDisabled;
+  }
+
   init() {
     const prevFilterComponent = this.#filterComponent;
     this.#filterComponent = new FilterView({
       onFilterChange: this.#handleFilterTypeChange,
       currentFilter: this.#filterModel.filter,
+      filterDisabled: this.filterDisabled,
     });
 
     if (prevFilterComponent === null) {
@@ -43,4 +48,5 @@ export default class FilterPresenter {
     }
     this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
   };
+
 }

@@ -1,7 +1,14 @@
-import { offers } from '../mocks/offers.js';
-
 export default class OffersModel {
-  #offers = offers;
+  #projectApiService = null;
+  #offers = [];
+
+  constructor({projectApiService}) {
+    this.#projectApiService = projectApiService;
+  }
+
+  get offers() {
+    return this.#offers;
+  }
 
   getOffersById(ids) {
     const offersById = [];
@@ -37,4 +44,11 @@ export default class OffersModel {
     return Array.from(typesSet);
   }
 
+  async init() {
+    try {
+      this.#offers = await this.#projectApiService.offers;
+    } catch(err) {
+      this.#offers = [];
+    }
+  }
 }

@@ -1,7 +1,10 @@
-import { destinations } from '../mocks/destinations.js';
-
 export default class DestinationsModel {
-  #destinations = destinations;
+  #projectApiService = null;
+  #destinations = [];
+
+  constructor({projectApiService}) {
+    this.#projectApiService = projectApiService;
+  }
 
   getDestinationById(id) {
     return this.#destinations.find((destination) => destination.id === id);
@@ -19,4 +22,11 @@ export default class DestinationsModel {
     return Array.from(citiesSet);
   }
 
+  async init() {
+    try {
+      this.#destinations = await this.#projectApiService.destinations;
+    } catch(err) {
+      this.#destinations = [];
+    }
+  }
 }

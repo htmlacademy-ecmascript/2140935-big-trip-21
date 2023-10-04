@@ -1,45 +1,64 @@
 import Observable from '../framework/observable.js';
-import { getRandomPoint } from '../mocks/points.js';
-import { POINTS_COUNT } from '../const.js';
-import { updateItem } from '../utils/point.js';
+import { findTripDates, extractTripRoute, calculateTripBaseCost, getEmptyFilters } from '../utils/utils.js';
+import { UpdateType } from '../const.js';
 
 export default class PointsModel extends Observable {
-  #points = Array.from({length: POINTS_COUNT}, getRandomPoint);
+  #projectApiService = null;
+  #points = [];
+
+  constructor({projectApiService}) {
+    super();
+    this.#projectApiService = projectApiService;
+  }
 
   get points() {
     return this.#points;
   }
 
-  updatePoints(updatedPoint) {
-    this.#points = updateItem(this.#points, updatedPoint);
+  async init() {
+    try {
+      const points = await this.#projectApiService.points;
+      this.#points = points.map(this.#adaptToClient);
+    } catch(err) {
+      this.#points = [];
+    }
+    this._notify(UpdateType.INIT);
   }
 
-  updatePoint(updateType, update) {
+  async updatePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t update unexisting point');
     }
 
-    this.#points = [
-      ...this.#points.slice(0, index),
-      update,
-      ...this.#points.slice(index + 1),
-    ];
+    try {
+      const response = await this.#projectApiService.updatePoint(update);
+      const updatedPoint = this.#adaptToClient(response);
+      this.#points = [
+        ...this.#points.slice(0, index),
+        updatedPoint,
+        ...this.#points.slice(index + 1),
+      ];
 
-    this._notify(updateType, update);
+      this._notify(updateType, updatedPoint);
+    } catch(err) {
+      throw new Error('Can\'t update point');
+    }
   }
 
-  addPoint(updateType, update) {
-    this.#points = [
-      update,
-      ...this.#points,
-    ];
-
-    this._notify(updateType, update);
+  async addPoint(updateType, update) {
+    try {
+      const response = await this.#projectApiService.addPoint(update);
+      const newPoint = this.#adaptToClient(response);
+      this.#points = [newPoint, ...this.#points];
+      this._notify(updateType, newPoint);
+    } catch(err) {
+      throw new Error('Can\'t add point');
+    }
   }
 
-  deletePoint(updateType, update) {
+  async deletePoint(updateType, update) {
     const index = this.#points.findIndex((point) => point.id === update.id);
 
     if (index === -1) {
@@ -51,6 +70,54 @@ export default class PointsModel extends Observable {
       ...this.#points.slice(index + 1),
     ];
 
-    this._notify(updateType);
+    try {
+      await this.#projectApiService.deletePoint(update);
+      this.#points = [
+        ...this.#points.slice(0, index),
+        ...this.#points.slice(index + 1),
+      ];
+      this._notify(updateType);
+    } catch(err) {
+      throw new Error('Can\'t delete point');
+    }
+  }
+
+  #adaptToClient(point) {
+    const adaptedPoint = {...point,
+      basePrice: point['base_price'],
+      dateFrom: point['date_from'],
+      dateTo: point['date_to'],
+      isFavorite: point['is_favorite'],
+    };
+
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
+
+    return adaptedPoint;
+  }
+
+  get tripDates() {
+    return findTripDates(this.#points);
+  }
+
+  get tripRoute() {
+    if (this.#points.length === 3) {
+      return this.#points.slice(0, 3).map((point) => point.destination);
+    }
+    return extractTripRoute(this.#points);
+  }
+
+  get tripBaseCost() {
+    return calculateTripBaseCost(this.#points);
+  }
+
+  get allActiveOffersId() {
+    return this.#points.flatMap((point) => point.offers);
+  }
+
+  get filterDisabled() {
+    return getEmptyFilters(this.#points);
   }
 }

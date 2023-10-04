@@ -1,8 +1,8 @@
 import { render, replace, remove } from '../framework/render.js';
 import EditPointView from '../view/edit-point-view.js';
 import PointView from '../view/point-view.js';
-import { UserAction, UpdateType } from '../const.js';
-import { isDatesEqual, getTimeInterval } from '../utils/point.js';
+import { UserAction, UpdateType, EditMode } from '../const.js';
+import { isDatesEqual, getTimeInterval } from '../utils/utils.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -52,7 +52,8 @@ export default class PointPresenter {
       offersModel,
       onArrowUpClick: this.#handleCloseClick,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
+      editMode: EditMode.EDIT,
     });
 
     if (prevPointComponent === null || prevEditComponent === null) {
@@ -65,7 +66,8 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#editComponent, prevEditComponent);
+      replace(this.#pointComponent, prevEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -126,6 +128,41 @@ export default class PointPresenter {
       {...this.#point, isFavorite: !this.#point.isFavorite},
     );
   };
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#editComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#editComponent.shake(resetFormState);
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#editComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {

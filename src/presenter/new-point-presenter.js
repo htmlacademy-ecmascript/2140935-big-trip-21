@@ -1,6 +1,6 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import EditPointView from '../view/edit-point-view.js';
-import { UserAction, UpdateType, POINT_DEFAULT } from '../const.js';
+import { UserAction, UpdateType, EditMode, POINT_DEFAULT } from '../const.js';
 
 export default class NewPointPresenter {
   #pointContainer = null;
@@ -24,16 +24,36 @@ export default class NewPointPresenter {
     }
 
     this.#editPointComponent = new EditPointView({
-      POINT_DEFAULT,
+      point: {...POINT_DEFAULT},
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
       onArrowUpClick: this.#handleDeleteClick,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
+      editMode: EditMode.NEW,
     });
     render(this.#editPointComponent, this.#pointContainer.element, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  setSaving() {
+    this.#editPointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#editPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#editPointComponent.shake(resetFormState);
   }
 
   destroy() {
@@ -55,7 +75,6 @@ export default class NewPointPresenter {
       UpdateType.MINOR,
       point,
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {
