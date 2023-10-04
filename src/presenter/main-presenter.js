@@ -80,6 +80,7 @@ export default class MainPresenter {
       this.#listEmptyComponent = new ListEmptyView({filterType: this.#filterModel.filter});
       render(this.#listEmptyComponent, this.#pointsContainer);
     } else {
+      console.log(this.points);
       this.#renderSort();
       render(this.#pointsListComponent, this.#pointsContainer);
       for (const point of this.points) {

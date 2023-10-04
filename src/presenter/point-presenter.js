@@ -1,7 +1,7 @@
 import { render, replace, remove } from '../framework/render.js';
 import EditPointView from '../view/edit-point-view.js';
 import PointView from '../view/point-view.js';
-import { UserAction, UpdateType } from '../const.js';
+import { UserAction, UpdateType, EditMode } from '../const.js';
 import { isDatesEqual, getTimeInterval } from '../utils/point.js';
 
 const Mode = {
@@ -52,7 +52,8 @@ export default class PointPresenter {
       offersModel,
       onArrowUpClick: this.#handleCloseClick,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
+      editMode: EditMode.EDIT,
     });
 
     if (prevPointComponent === null || prevEditComponent === null) {

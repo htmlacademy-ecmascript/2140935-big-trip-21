@@ -45,7 +45,7 @@ export function getTimeInterval(start, finish) {
 export function formatTimeInterval(intervalMinutes) {
   const days = Math.floor(intervalMinutes / (60 * 24));
   const hours = Math.floor((intervalMinutes % (60 * 24)) / 60);
-  const minutes = intervalMinutes % 60;
+  const minutes = Math.floor(intervalMinutes % 60);
 
   if (days > 0) {
     return `${days.toString()}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;

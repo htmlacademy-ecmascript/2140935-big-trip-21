@@ -1,16 +1,16 @@
-import { nanoid } from 'nanoid';
+import dayjs from 'dayjs';
 
-export const POINTS_COUNT = 5;
+export const POINTS_COUNT = 2;
 
 export const DAY_FORMAT = 'MMM DD';
 
 export const TIME_FORMAT = 'HH:mm';
 
 export const POINT_DEFAULT = {
-  id: nanoid(),
+  id: '',
   basePrice: 0,
-  dateFrom: '2023-01-01T00:00:00.000Z',
-  dateTo: '2023-01-01T00:00:00.000Z',
+  dateFrom: dayjs().toISOString(),
+  dateTo: dayjs().toISOString(),
   destination: 3,
   isFavorite: false,
   offers: [],
@@ -40,4 +40,9 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+};
+
+export const EditMode = {
+  EDIT: 'Delete',
+  NEW: 'Cancel',
 };

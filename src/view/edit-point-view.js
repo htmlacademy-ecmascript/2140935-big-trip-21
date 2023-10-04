@@ -1,7 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { formattedDate } from '../utils/point.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
-import { POINT_DEFAULT } from '../const.js';
+import { POINT_DEFAULT, EditMode } from '../const.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -92,7 +92,7 @@ function createDestinationTemplate(destination) {
   }
 }
 
-function createEditPointTemplate(data) {
+function createEditPointTemplate(data, editMode) {
   const { id, basePrice, dateFrom, dateTo, type, destinationData, offersData, typeOffers, allTypes, allCities } = data;
   const timeStart = formattedDate(dateFrom, 'DD/MM/YY HH:mm');
   const timeEnd = formattedDate(dateTo, 'DD/MM/YY HH:mm');
@@ -147,7 +147,7 @@ function createEditPointTemplate(data) {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__reset-btn" type="reset">${editMode}</button>
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
           </button>
@@ -168,8 +168,9 @@ export default class EditPointView extends AbstractStatefulView {
   #destinationsModel = null;
   #offersModel = null;
   #datepicker = null;
+  #editMode = EditMode.EDIT;
 
-  constructor({ point, destinationsModel, offersModel, onArrowUpClick, onFormSubmit, onDeleteClick}) {
+  constructor({ point, destinationsModel, offersModel, onArrowUpClick, onFormSubmit, onDeleteClick, editMode }) {
     super();
     this._setState(EditPointView.parsePointToState(point, destinationsModel, offersModel));
     this.#destinationsModel = destinationsModel;
@@ -177,12 +178,13 @@ export default class EditPointView extends AbstractStatefulView {
     this.#handleCloseClick = onArrowUpClick;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
+    this.#editMode = editMode;
 
     this._restoreHandlers();
   }
 
   get template() {
-    return createEditPointTemplate(this._state);
+    return createEditPointTemplate(this._state, this.#editMode);
   }
 
   removeElement() {
@@ -248,7 +250,7 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #priceChangeHandler = (evt) => {
-    this._state.basePrice = evt.target.value;
+    this._state.basePrice = parseInt(evt.target.value, 10);
   };
 
   #closeClickHandler = (evt) => {

@@ -1,6 +1,7 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import EditPointView from '../view/edit-point-view.js';
-import { UserAction, UpdateType, POINT_DEFAULT } from '../const.js';
+import { UserAction, UpdateType, EditMode, POINT_DEFAULT } from '../const.js';
+import { nanoid } from 'nanoid';
 
 export default class NewPointPresenter {
   #pointContainer = null;
@@ -23,13 +24,19 @@ export default class NewPointPresenter {
       return;
     }
 
+    const pointDefault = {
+      ...POINT_DEFAULT,
+      id: nanoid(),
+    };
+
     this.#editPointComponent = new EditPointView({
-      POINT_DEFAULT,
+      point: pointDefault,
       destinationsModel: this.#destinationsModel,
       offersModel: this.#offersModel,
       onArrowUpClick: this.#handleDeleteClick,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
+      editMode: EditMode.NEW,
     });
     render(this.#editPointComponent, this.#pointContainer.element, RenderPosition.AFTERBEGIN);
 
