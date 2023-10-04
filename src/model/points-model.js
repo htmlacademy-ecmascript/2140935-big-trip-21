@@ -78,7 +78,6 @@ export default class PointsModel extends Observable {
       ];
       this._notify(updateType);
     } catch(err) {
-      console.log(err);
       throw new Error('Can\'t delete point');
     }
   }

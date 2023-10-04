@@ -43,7 +43,6 @@ export default class ProjectApiService extends ApiService {
       body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
-
     const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse;
@@ -70,8 +69,6 @@ export default class ProjectApiService extends ApiService {
     delete adaptedPoint.dateFrom;
     delete adaptedPoint.dateTo;
     delete adaptedPoint.isFavorite;
-
-    console.log(adaptedPoint);
 
     return adaptedPoint;
   }
