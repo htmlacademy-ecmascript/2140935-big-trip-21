@@ -5,6 +5,7 @@ import ListEmptyView from '../view/list-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import FilterPresenter from './filter-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
+import LoadingView from '../view/loading-view.js';
 import { FilterType, SortType, UpdateType, UserAction} from '../const.js';
 import { filter, sortDay, sortTime, sortPrice } from '../utils/point.js';
 
@@ -17,10 +18,12 @@ export default class MainPresenter {
   #siteTripControlsElement = document.querySelector('.trip-controls__filters');
   #sortView = null;
   #listEmptyComponent = null;
+  #loadingComponent = new LoadingView();
   #pointsListComponent = new PointsListView();
   #newPointPresenter = null;
   #pointPresenters = new Map();
   #currentSortType = SortType.DAY;
+  #isLoading = true;
 
   constructor({ pointsContainer, pointsModel, offersModel, destinationsModel, filterModel, onNewPointDestroy }) {
     this.#pointsContainer = pointsContainer;
@@ -76,11 +79,12 @@ export default class MainPresenter {
   }
 
   #renderPoints() {
-    if (this.points.length === 0) {
+    if (this.#isLoading) {
+      this.#renderLoading();
+    } else if (this.points.length === 0) {
       this.#listEmptyComponent = new ListEmptyView({filterType: this.#filterModel.filter});
       render(this.#listEmptyComponent, this.#pointsContainer);
     } else {
-      console.log(this.points);
       this.#renderSort();
       render(this.#pointsListComponent, this.#pointsContainer);
       for (const point of this.points) {
@@ -129,6 +133,11 @@ export default class MainPresenter {
         this.#clearPoints({resetSortType: true});
         this.#renderPoints();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderPoints();
+        break;
     }
   };
 
@@ -150,10 +159,17 @@ export default class MainPresenter {
     render(this.#sortView, this.#pointsContainer);
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#pointsListComponent.element);
+  }
+
   #clearPoints({resetSortType = false} = {}) {
     this.#newPointPresenter.destroy();
     if (this.#listEmptyComponent) {
       remove(this.#listEmptyComponent);
+    }
+    if (this.#loadingComponent) {
+      remove(this.#loadingComponent);
     }
     if (this.#sortView) {
       remove(this.#sortView);
