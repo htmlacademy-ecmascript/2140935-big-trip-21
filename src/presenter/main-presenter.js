@@ -112,7 +112,6 @@ export default class MainPresenter {
   }
 
   #renderPoints() {
-    render(this.#pointsListComponent, this.#pointsContainer);
     if (this.#isLoading) {
       this.#renderLoading();
     } else if (this.points.length === 0) {
@@ -121,6 +120,7 @@ export default class MainPresenter {
     } else {
       this.#renderTripInfo();
       this.#renderSort();
+      render(this.#pointsListComponent, this.#pointsContainer);
       for (const point of this.points) {
         const pointPresenter = new PointPresenter({
           pointContainer: this.#pointsListComponent,
@@ -212,7 +212,7 @@ export default class MainPresenter {
   }
 
   #renderLoading() {
-    render(this.#loadingComponent, this.#pointsListComponent.element);
+    render(this.#loadingComponent, this.#pointsContainer);
   }
 
   #clearPoints({resetSortType = false} = {}) {
