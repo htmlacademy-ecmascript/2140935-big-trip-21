@@ -9,7 +9,8 @@ import FilterPresenter from './filter-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import { FilterType, SortType, UpdateType, UserAction, TimeLimit } from '../const.js';
-import { filter, sortDay, sortTime, sortPrice, calculateOffersCost } from '../utils/utils.js';
+import { sortDay, sortTime, sortPrice, calculateOffersCost } from '../utils/utils.js';
+import { filter } from '../utils/filter.js';
 
 export default class MainPresenter {
   #pointsContainer = null;

@@ -1,5 +1,6 @@
 import Observable from '../framework/observable.js';
-import { findTripDates, extractTripRoutes, calculateTripBaseCost, getEmptyFilters } from '../utils/utils.js';
+import { findTripDates, extractTripRoutes, calculateTripBaseCost } from '../utils/utils.js';
+import { getEmptyFilters } from '../utils/filter.js';
 import { UpdateType } from '../const.js';
 
 export default class PointsModel extends Observable {
