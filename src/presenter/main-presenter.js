@@ -88,6 +88,9 @@ export default class MainPresenter {
   }
 
   #renderTripInfo() {
+    if (this.#tripInfoComponent) {
+      remove(this.#tripInfoComponent);
+    }
     this.#tripInfoComponent = new TripInfoView({tripDates: this.tripDates, tripRoutes: this.tripRoutes, tripCost: this.tripCost, destinationsModel: this.#destinationsModel});
     render(this.#tripInfoComponent, this.#siteTripInfoElement, 'AFTERBEGIN');
   }
@@ -171,6 +174,7 @@ export default class MainPresenter {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointPresenters.get(data.id).init(data);
+        this.#renderTripInfo();
         break;
       case UpdateType.MINOR:
         this.#clearPoints({resetSortType: false});
