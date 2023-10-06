@@ -1,5 +1,5 @@
 import Observable from '../framework/observable.js';
-import { findTripDates, extractTripRoute, calculateTripBaseCost, getEmptyFilters } from '../utils/utils.js';
+import { findTripDates, extractTripRoutes, calculateTripBaseCost, getEmptyFilters } from '../utils/utils.js';
 import { UpdateType } from '../const.js';
 
 export default class PointsModel extends Observable {
@@ -102,11 +102,11 @@ export default class PointsModel extends Observable {
     return findTripDates(this.#points);
   }
 
-  get tripRoute() {
+  get tripRoutes() {
     if (this.#points.length === 3) {
       return this.#points.slice(0, 3).map((point) => point.destination);
     }
-    return extractTripRoute(this.#points);
+    return extractTripRoutes(this.#points);
   }
 
   get tripBaseCost() {
@@ -117,7 +117,7 @@ export default class PointsModel extends Observable {
     return this.#points.flatMap((point) => point.offers);
   }
 
-  get filterDisabled() {
+  get filtersDisabled() {
     return getEmptyFilters(this.#points);
   }
 }

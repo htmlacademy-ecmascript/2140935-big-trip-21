@@ -17,8 +17,8 @@ export default class FilterPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-  get filterDisabled() {
-    return this.#pointsModel.filterDisabled;
+  get filtersDisabled() {
+    return this.#pointsModel.filtersDisabled;
   }
 
   init() {
@@ -26,7 +26,7 @@ export default class FilterPresenter {
     this.#filterComponent = new FilterView({
       onFilterChange: this.#handleFilterTypeChange,
       currentFilter: this.#filterModel.filter,
-      filterDisabled: this.filterDisabled,
+      filtersDisabled: this.filtersDisabled,
     });
 
     if (prevFilterComponent === null) {

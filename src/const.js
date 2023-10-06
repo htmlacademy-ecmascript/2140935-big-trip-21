@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 export const POINTS_COUNT = 2;
 
 export const DAY_FORMAT = 'MMM DD';
@@ -9,9 +7,9 @@ export const TIME_FORMAT = 'HH:mm';
 export const POINT_DEFAULT = {
   id: null,
   basePrice: 0,
-  dateFrom: dayjs().toISOString(),
-  dateTo: dayjs().toISOString(),
-  destination: null,//'7ecc5033-41eb-417e-9bc0-e1bf56d4de4f',
+  dateFrom: '',
+  dateTo: '',
+  destination: null,
   isFavorite: false,
   offers: [],
   type: 'flight',

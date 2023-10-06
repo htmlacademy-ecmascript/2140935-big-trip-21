@@ -92,6 +92,7 @@ export default class PointPresenter {
   };
 
   #handleCloseClick = () => {
+    this.#editComponent.reset(this.#point);
     this.#replaceEditToPoint();
   };
 

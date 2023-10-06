@@ -1,8 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { formatTripDates } from '../utils/utils.js';
 
-function createTripRoute(tripRoute, destinationsModel) {
-  const destinationNames = tripRoute.map((id) => destinationsModel.getDestinationById(id).name);
+function createTripRoute(tripRoutes, destinationsModel) {
+  const destinationNames = tripRoutes.map((id) => destinationsModel.getDestinationById(id).name);
 
   if (destinationNames.length === 3) {
     return `${destinationNames[0]} &mdash; ${destinationNames[1]} &mdash; ${destinationNames[2]}`;
@@ -10,8 +10,8 @@ function createTripRoute(tripRoute, destinationsModel) {
   return `${destinationNames[0]} &mdash; ... &mdash; ${destinationNames[1]}`;
 }
 
-function createTripInfoTemplate(tripDates, tripRoute, tripCost, destinationsModel) {
-  const tripRouteTemplate = createTripRoute(tripRoute, destinationsModel);
+function createTripInfoTemplate(tripDates, tripRoutes, tripCost, destinationsModel) {
+  const tripRouteTemplate = createTripRoute(tripRoutes, destinationsModel);
   return (
     `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
@@ -29,19 +29,19 @@ function createTripInfoTemplate(tripDates, tripRoute, tripCost, destinationsMode
 
 export default class TripInfoView extends AbstractView {
   #tripDates = null;
-  #tripRoute = null;
+  #tripRoutes = null;
   #tripCost = null;
   #destinationsModel = null;
 
-  constructor({tripDates, tripRoute, tripCost, destinationsModel}) {
+  constructor({tripDates, tripRoutes, tripCost, destinationsModel}) {
     super();
     this.#tripDates = tripDates;
-    this.#tripRoute = tripRoute;
+    this.#tripRoutes = tripRoutes;
     this.#tripCost = tripCost;
     this.#destinationsModel = destinationsModel;
   }
 
   get template() {
-    return createTripInfoTemplate(this.#tripDates, this.#tripRoute, this.#tripCost, this.#destinationsModel);
+    return createTripInfoTemplate(this.#tripDates, this.#tripRoutes, this.#tripCost, this.#destinationsModel);
   }
 }

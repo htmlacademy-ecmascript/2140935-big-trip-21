@@ -55,8 +55,8 @@ export default class MainPresenter {
     return this.#pointsModel.tripDates;
   }
 
-  get tripRoute() {
-    return this.#pointsModel.tripRoute;
+  get tripRoutes() {
+    return this.#pointsModel.tripRoutes;
   }
 
   get tripCost() {
@@ -88,7 +88,7 @@ export default class MainPresenter {
   }
 
   #renderTripInfo() {
-    this.#tripInfoComponent = new TripInfoView({tripDates: this.tripDates, tripRoute: this.tripRoute, tripCost: this.tripCost, destinationsModel: this.#destinationsModel});
+    this.#tripInfoComponent = new TripInfoView({tripDates: this.tripDates, tripRoutes: this.tripRoutes, tripCost: this.tripCost, destinationsModel: this.#destinationsModel});
     render(this.#tripInfoComponent, this.#siteTripInfoElement, 'AFTERBEGIN');
   }
 
@@ -108,6 +108,7 @@ export default class MainPresenter {
   }
 
   #renderPoints() {
+    render(this.#pointsListComponent, this.#pointsContainer);
     if (this.#isLoading) {
       this.#renderLoading();
     } else if (this.points.length === 0) {
@@ -116,7 +117,6 @@ export default class MainPresenter {
     } else {
       this.#renderTripInfo();
       this.#renderSort();
-      render(this.#pointsListComponent, this.#pointsContainer);
       for (const point of this.points) {
         const pointPresenter = new PointPresenter({
           pointContainer: this.#pointsListComponent,
