@@ -6,10 +6,9 @@ import OffersModel from './model/offers-model.js';
 import FilterModel from './model/filter-model.js';
 import DestinationsModel from './model/destinations-model.js';
 import ProjectApiService from './project-api-service.js';
-import { nanoid } from 'nanoid';
 
 const siteTripInfoElement = document.querySelector('.trip-main');
-const AUTHORIZATION = `Basic ${nanoid()}`;
+const AUTHORIZATION = 'Basic abcdefghijklmnopqrstuvwxyz';
 const END_POINT = 'https://21.objects.pages.academy/big-trip';
 
 const siteMainElement = document.querySelector('.trip-events');

@@ -93,7 +93,7 @@ export function formatTripDates(startDate, endDate) {
   return `${startMonth} ${startDay} — ${endMonth} ${endDay}`;
 }
 
-export function extractTripRoute(points) {
+export function extractTripRoutes(points) {
   let earliestDateFrom = points[0].dateFrom;
   let earliestDestination = points[0].destination;
   let latestDateTo = points[0].dateTo;

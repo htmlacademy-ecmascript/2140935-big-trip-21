@@ -26,15 +26,15 @@ function createFilterTemplate() {
 
 export default class FilterView extends AbstractView {
   #handleFilterChange = null;
-  #filterDisabled = null;
+  #filtersDisabled = null;
 
-  constructor({onFilterChange, currentFilter, filterDisabled}) {
+  constructor({onFilterChange, currentFilter, filtersDisabled}) {
     super();
-    this.#filterDisabled = filterDisabled;
+    this.#filtersDisabled = filtersDisabled;
     this.#handleFilterChange = onFilterChange;
     this.element.addEventListener('change', this.#filterChangeHandler);
     this.element.querySelector(`#filter-${currentFilter}`).checked = true;
-    this.#filterDisabled.map((filterType) => {
+    this.#filtersDisabled.map((filterType) => {
       this.element.querySelector(`#filter-${filterType}`).disabled = true;
     });
   }
