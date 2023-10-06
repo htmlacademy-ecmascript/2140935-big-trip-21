@@ -1,12 +1,12 @@
 import {FilterType} from '../const';
 
-function startToday() {
+function getStartOfToday() {
   const start = new Date();
   start.setHours(0, 0, 0, 0);
   return start;
 }
 
-function endOfToday() {
+function getEndOfToday() {
   const end = new Date();
   end.setHours(23, 59, 59, 999);
   return end;
@@ -15,7 +15,7 @@ function endOfToday() {
 export const filter = {
   [FilterType.EVERYTHING]: (points) => points,
   [FilterType.FUTURE]: (points) => points.filter((point) => new Date(point.dateFrom) > new Date()),
-  [FilterType.PRESENT]: (points) => points.filter((point) => new Date(point.dateFrom) <= endOfToday() && new Date(point.dateTo) >= startToday()),
+  [FilterType.PRESENT]: (points) => points.filter((point) => new Date(point.dateFrom) <= getEndOfToday() && new Date(point.dateTo) >= getStartOfToday()),
   [FilterType.PAST]: (points) => points.filter((point) => new Date(point.dateTo) < new Date()),
 };
 
