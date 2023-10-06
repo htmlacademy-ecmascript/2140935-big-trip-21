@@ -9,7 +9,8 @@ import FilterPresenter from './filter-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import { FilterType, SortType, UpdateType, UserAction, TimeLimit } from '../const.js';
-import { filter, sortDay, sortTime, sortPrice, calculateOffersCost } from '../utils/utils.js';
+import { sortDay, sortTime, sortPrice, calculateOffersCost } from '../utils/utils.js';
+import { filter } from '../utils/filter.js';
 
 export default class MainPresenter {
   #pointsContainer = null;
@@ -88,6 +89,9 @@ export default class MainPresenter {
   }
 
   #renderTripInfo() {
+    if (this.#tripInfoComponent) {
+      remove(this.#tripInfoComponent);
+    }
     this.#tripInfoComponent = new TripInfoView({tripDates: this.tripDates, tripRoutes: this.tripRoutes, tripCost: this.tripCost, destinationsModel: this.#destinationsModel});
     render(this.#tripInfoComponent, this.#siteTripInfoElement, 'AFTERBEGIN');
   }
@@ -108,7 +112,6 @@ export default class MainPresenter {
   }
 
   #renderPoints() {
-    render(this.#pointsListComponent, this.#pointsContainer);
     if (this.#isLoading) {
       this.#renderLoading();
     } else if (this.points.length === 0) {
@@ -117,6 +120,7 @@ export default class MainPresenter {
     } else {
       this.#renderTripInfo();
       this.#renderSort();
+      render(this.#pointsListComponent, this.#pointsContainer);
       for (const point of this.points) {
         const pointPresenter = new PointPresenter({
           pointContainer: this.#pointsListComponent,
@@ -171,6 +175,7 @@ export default class MainPresenter {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#pointPresenters.get(data.id).init(data);
+        this.#renderTripInfo();
         break;
       case UpdateType.MINOR:
         this.#clearPoints({resetSortType: false});
@@ -207,7 +212,7 @@ export default class MainPresenter {
   }
 
   #renderLoading() {
-    render(this.#loadingComponent, this.#pointsListComponent.element);
+    render(this.#loadingComponent, this.#pointsContainer);
   }
 
   #clearPoints({resetSortType = false} = {}) {

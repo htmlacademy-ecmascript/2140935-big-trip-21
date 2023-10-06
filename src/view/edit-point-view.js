@@ -219,8 +219,11 @@ export default class EditPointView extends AbstractStatefulView {
       .addEventListener('change', this.#priceChangeHandler);
     this.element.querySelectorAll('.event__offer-checkbox')
       .forEach((input) => input.addEventListener('change', this.#pointOffersHandler));
-    this.element.querySelector('.event__reset-btn')
-      .addEventListener('click', this.#formDeleteClickHandler);
+    if (this.#editMode === EditMode.EDIT) {
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
+    } else {
+      this.element.querySelector('.event__reset-btn').addEventListener('click', this.#closeClickHandler);
+    }
     this.#setDatepicker();
   }
 

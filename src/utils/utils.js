@@ -1,12 +1,4 @@
 import dayjs from 'dayjs';
-import {FilterType} from '../const';
-
-export const filter = {
-  [FilterType.EVERYTHING]: (points) => points,
-  [FilterType.FUTURE]: (points) => points.filter((point) => new Date(point.dateFrom) > new Date()),
-  [FilterType.PRESENT]: (points) => points.filter((point) => new Date(point.dateFrom) <= new Date() && new Date(point.dateTo) >= new Date()),
-  [FilterType.PAST]: (points) => points.filter((point) => new Date(point.dateTo) < new Date()),
-};
 
 export function capitalizeFirstLetter(str) {
   return str.replace(/^\w/, (match) => match.toUpperCase());
@@ -134,15 +126,4 @@ export function calculateOffersCost(allActiveOffersId, allOffers) {
     }
   }
   return prices.reduce((acc, price) => acc + price, 0);
-}
-
-export function getEmptyFilters (points) {
-  const emptyFilters = [];
-  for (const filterType in filter) {
-    const filteredPoints = filter[filterType](points);
-    if (filteredPoints.length === 0) {
-      emptyFilters.push(filterType);
-    }
-  }
-  return emptyFilters;
 }
