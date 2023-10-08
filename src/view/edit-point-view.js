@@ -1,4 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import he from 'he';
 import { formattedDate, capitalizeFirstLetter } from '../utils/utils.js';
 import { POINT_DEFAULT, EditMode } from '../const.js';
 import flatpickr from 'flatpickr';
@@ -9,7 +10,7 @@ function createEventTypeListTemplate(id, allTypes, isDisabled) {
   for (const type of allTypes) {
     typeListTemplate += `
     <div class="event__type-item">
-      <input id="event-type-${type.toLowerCase()}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${isDisabled ? 'disabled' : ''}>
+      <input id="event-type-${type.toLowerCase()}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${he.encode(type)}" ${isDisabled ? 'disabled' : ''}>
       <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-${id}">${capitalizeFirstLetter(type)}</label>
     </div>`;
   }
@@ -19,7 +20,7 @@ function createEventTypeListTemplate(id, allTypes, isDisabled) {
 function createCitiesListTemplate(allCities) {
   let citiesListTemplate = '';
   for (const city of allCities) {
-    citiesListTemplate += `<option value="${city}"></option>`;
+    citiesListTemplate += `<option value="${he.encode(city)}"></option>`;
   }
   return citiesListTemplate;
 }
@@ -131,10 +132,10 @@ function createEditPointTemplate(data, editMode) {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${id}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${timeStart}" ${isDisabled ? 'disabled' : ''}>
+            <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${he.encode(timeStart)}" ${isDisabled ? 'disabled' : ''}>
             &mdash;
             <label class="visually-hidden" for="event-end-time-${id}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${timeEnd}" ${isDisabled ? 'disabled' : ''}>
+            <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${he.encode(timeEnd)}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -142,7 +143,7 @@ function createEditPointTemplate(data, editMode) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${id}" type="number" name="event-price" value="${basePrice}" ${isDisabled ? 'disabled' : ''}>
+            <input class="event__input  event__input--price" id="event-price-${id}" type="number" name="event-price" value="${he.encode(basePrice)}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving' : 'Save'}</button>

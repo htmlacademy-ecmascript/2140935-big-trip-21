@@ -1,6 +1,8 @@
 import {render, remove} from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import PointsListView from '../view/points-list-view.js';
+import FailedLoadView from '../view/failed-load-view.js';
+import NewPointButtonView from '../view/new-point-button-view.js';
 import SortView from '../view/sort-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
@@ -21,9 +23,11 @@ export default class MainPresenter {
   #siteTripControlsElement = document.querySelector('.trip-controls__filters');
   #siteTripInfoElement = document.querySelector('.trip-main');
   #sortView = null;
+  #newPointButtonComponent = null;
   #listEmptyComponent = null;
   #tripInfoComponent = null;
   #loadingComponent = new LoadingView();
+  #failedLoadComponent = null;
   #pointsListComponent = new PointsListView();
   #newPointPresenter = null;
   #pointPresenters = new Map();
@@ -34,7 +38,7 @@ export default class MainPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({ pointsContainer, pointsModel, offersModel, destinationsModel, filterModel, onNewPointDestroy }) {
+  constructor({ pointsContainer, pointsModel, offersModel, destinationsModel, filterModel }) {
     this.#pointsContainer = pointsContainer;
     this.#pointsModel = pointsModel;
     this.#offersModel = offersModel;
@@ -45,7 +49,7 @@ export default class MainPresenter {
       offersModel: this.#offersModel,
       destinationsModel: this.#destinationsModel,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewPointDestroy,
+      onDestroy: this.#handleNewPointFormClose,
     });
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
@@ -84,8 +88,16 @@ export default class MainPresenter {
   }
 
   init() {
+    this.#renderNewPointButton();
     this.#renderFilter();
     this.#renderPoints();
+  }
+
+  #renderNewPointButton() {
+    this.#newPointButtonComponent = new NewPointButtonView({
+      onClick: this.#handleNewPointButtonClick
+    });
+    render(this.#newPointButtonComponent, this.#siteTripInfoElement);
   }
 
   #renderTripInfo() {
@@ -96,7 +108,7 @@ export default class MainPresenter {
     render(this.#tripInfoComponent, this.#siteTripInfoElement, 'AFTERBEGIN');
   }
 
-  createPoint() {
+  #createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter.init();
@@ -112,7 +124,10 @@ export default class MainPresenter {
   }
 
   #renderPoints() {
-    if (this.#isLoading) {
+    if (this.#failedLoadComponent) {
+      this.#newPointButtonComponent.element.disabled = true;
+    } else if (this.#isLoading) {
+      this.#newPointButtonComponent.element.disabled = true;
       this.#renderLoading();
     } else if (this.points.length === 0) {
       this.#listEmptyComponent = new ListEmptyView({filterType: this.#filterModel.filter});
@@ -134,6 +149,15 @@ export default class MainPresenter {
       }
     }
   }
+
+  #handleNewPointButtonClick = () => {
+    this.#createPoint();
+    this.#newPointButtonComponent.element.disabled = true;
+  };
+
+  #handleNewPointFormClose = () => {
+    this.#newPointButtonComponent.element.disabled = false;
+  };
 
   #handleModeChange = () => {
     this.#newPointPresenter.destroy();
@@ -188,7 +212,14 @@ export default class MainPresenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
+        this.#newPointButtonComponent.element.disabled = false;
         this.#renderPoints();
+        break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        this.#newPointButtonComponent.element.disabled = true;
+        this.#failedLoadComponent = new FailedLoadView();
+        render(this.#failedLoadComponent, this.#pointsContainer);
         break;
     }
   };
